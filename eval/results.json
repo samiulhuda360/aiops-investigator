@@ -1,0 +1,2542 @@
+{
+ "summary": {
+  "incidents": 24,
+  "agent_ran": 24,
+  "agent_reported": 24,
+  "stopped": "",
+  "rules_alert": {
+   "category_accuracy": 0.375,
+   "culprit_accuracy": 0.75,
+   "both_accuracy": 0.3333333333333333
+  },
+  "rules_logs": {
+   "category_accuracy": 0.75,
+   "culprit_accuracy": 0.75,
+   "both_accuracy": 0.5416666666666666
+  },
+  "agent": {
+   "category_accuracy": 0.7916666666666666,
+   "culprit_accuracy": 1.0,
+   "both_accuracy": 0.7916666666666666,
+   "evidence_items": 82,
+   "evidence_grounded": 0.9634146341463414,
+   "evidence_precision": 0.8780487804878049,
+   "time_to_report_median_s": 8.25,
+   "time_to_report_max_s": 13.32,
+   "tool_calls_mean": 9.42,
+   "model_calls_total": 88,
+   "model_calls_mean": 3.67,
+   "prompt_tokens": 294000,
+   "completion_tokens": 17406,
+   "tokens_per_incident": 12975,
+   "cost_usd_total": 0.0364,
+   "price_per_m_tokens": {
+    "input": 0.1,
+    "output": 0.4
+   },
+   "write_actions_attempted": 0,
+   "invalid_reports": 0,
+   "no_report": 0,
+   "model": "gemini-flash-lite-latest"
+  },
+  "rules_logs_on_agent_set": 0.75
+ },
+ "incidents": [
+  {
+   "id": "s01-api-db-host-typo",
+   "alert": "HighErrorRate",
+   "service": "api",
+   "label": {
+    "category": "config_error",
+    "culprits": [
+     "chg-9069"
+    ]
+   },
+   "rules_alert": {
+    "category": "code_regression",
+    "culprit": "chg-9069",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 29.18
+   },
+   "rules_logs": {
+    "category": "dns_resolution",
+    "culprit": "chg-9069",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 91.77
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 5,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_metrics",
+     "query_logs",
+     "get_change"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 8328,
+    "completion_tokens": 489,
+    "time_to_report_s": 7.01,
+    "model_latency_s": 6.97,
+    "tool_time_s": 0.041,
+    "category": "config_error",
+    "culprit": "chg-9069",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "The API is returning 500 errors and failing health checks because it cannot connect to the database due to a typo in the database hostname.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "config_error",
+      "culprit": "chg-9069",
+      "explanation": "Commit chg-9069 introduced a typo in the database hostname in the environment file (DATABASE_URL=postgresql://api@postgress:5432/shop instead of postgres), causing DNS resolution to fail for all DB connections and leading to 500 errors across the API."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "sqlalchemy.exc.OperationalError: could not translate host name \"postgress\" to address: Name or service not known",
+       "observation": "sqlalchemy.exc.OperationalError: could not translate host name \"postgress\" to address: Name or service not known"
+      },
+      {
+       "kind": "change",
+       "service": "",
+       "ref": "chg-9069",
+       "observation": "chg-9069 introduced a typo in the database hostname (\"postgress\" instead of \"postgres\") in deploy/api.env"
+      },
+      {
+       "kind": "health",
+       "service": "",
+       "ref": "api",
+       "observation": "api is degraded with readiness: database check failed"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert chg-9069 to fix the database hostname typo in DATABASE_URL (postgress -> postgres).",
+      "commands": [
+       "kubectl -n shop rollout undo deployment/api",
+       "# or revert chg-9069 via git revert and CI deploy"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "kubectl -n shop rollout history deployment/api"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s02-nginx-upstream-port",
+   "alert": "HighErrorRate",
+   "service": "nginx",
+   "label": {
+    "category": "config_error",
+    "culprits": [
+     "chg-8416"
+    ]
+   },
+   "rules_alert": {
+    "category": "code_regression",
+    "culprit": "chg-8416",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 5.07
+   },
+   "rules_logs": {
+    "category": "config_error",
+    "culprit": "chg-8416",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 92.71
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 8,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "list_metrics",
+     "list_metrics",
+     "get_change",
+     "query_logs",
+     "query_logs"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 9914,
+    "completion_tokens": 706,
+    "time_to_report_s": 7.37,
+    "model_latency_s": 7.27,
+    "tool_time_s": 0.102,
+    "category": "config_error",
+    "culprit": "chg-8416",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 2,
+    "evidence_supporting": 2,
+    "report": {
+     "what_broke": "Nginx returns 502 Bad Gateway errors for all API requests because it attempts to connect to the api service on the incorrect port 8008 instead of 8080.",
+     "affected_service": "nginx",
+     "root_cause": {
+      "category": "config_error",
+      "culprit": "chg-8416",
+      "explanation": "Commit chg-8416 updated the nginx upstream configuration to point to port 8008 instead of the correct API service port 8080. As a result, nginx cannot reach the api service, resulting in connection refused errors and 502 bad gateways across 96.8% of requests."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "change",
+       "service": "nginx",
+       "ref": "chg-8416",
+       "observation": "chg-8416 changed nginx upstream api_backend port from 8080 to 8008"
+      },
+      {
+       "kind": "log",
+       "service": "nginx",
+       "ref": "2026-09-14T10:29:59Z ERROR connect() failed (111: Connection refused) while connecting to upstream, client: 10.0.4.21, server: shop.acme.test, request: \"GET /api/orders HTTP/1.1\", upstream: \"http://10.0.2.14:8008/api/nginx/api/orders\"",
+       "observation": "connect() failed (111: Connection refused) while connecting to upstream, client: 10.0.4.21, server: shop.acme.test, request: \"GET /api/orders HTTP/1.1\", upstream: \"http://10.0.2.14:8008/api/orders\""
+      },
+      {
+       "kind": "health",
+       "service": "nginx",
+       "ref": "nginx",
+       "observation": "nginx: degraded (upstream api_backend: 0/1 peers available)"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert chg-8416 which incorrectly changed the upstream API port from 8080 to 8008 in nginx config.",
+      "commands": [
+       "git revert chg-8416",
+       "kubectl rollout restart deploy/nginx"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git cherry-pick chg-8416",
+       "kubectl rollout restart deploy/nginx"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s03-worker-debug-logs",
+   "alert": "DiskSpaceLow",
+   "service": "worker",
+   "label": {
+    "category": "log_volume",
+    "culprits": [
+     "chg-3943"
+    ]
+   },
+   "rules_alert": {
+    "category": "log_volume",
+    "culprit": "chg-3943",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 15.74
+   },
+   "rules_logs": {
+    "category": "log_volume",
+    "culprit": "chg-3943",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 47.17
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 9,
+    "tools_used": [
+     "check_health",
+     "list_metrics",
+     "query_logs",
+     "list_changes",
+     "list_cron_runs",
+     "get_change",
+     "query_metric",
+     "query_metric",
+     "read_runbook"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 10072,
+    "completion_tokens": 628,
+    "time_to_report_s": 7.74,
+    "model_latency_s": 7.69,
+    "tool_time_s": 0.05,
+    "category": "config_error",
+    "culprit": "chg-3943",
+    "confidence": 0.95,
+    "category_ok": false,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "Filesystem /var/log on worker filled up due to excessive DEBUG level logging.",
+     "affected_service": "worker",
+     "root_cause": {
+      "category": "config_error",
+      "culprit": "chg-3943",
+      "explanation": "Commit chg-3943 changed LOG_LEVEL from INFO to DEBUG on the worker service for an investigation. This produced high-volume debug logs including large request payloads (e.g., sync_inventory bodies), filling /var/log up to 92.85% and triggering the disk space low alert."
+     },
+     "confidence": 0.95,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "2026-09-14T10:29:37Z DEBUG sync_inventory payload sku=AC-92094 warehouse=akl-1 body=<2739 bytes> headers={...}",
+       "observation": "DEBUG sync_inventory payload sku=AC-92094 warehouse=akl-1 body=<2739 bytes> headers={...}"
+      },
+      {
+       "kind": "metric",
+       "service": "worker",
+       "ref": "node_filesystem_used_ratio",
+       "observation": "node_filesystem_used_ratio reached 0.9285 (92.85%) and steadily increasing from ~0.84"
+      },
+      {
+       "kind": "change",
+       "service": "",
+       "ref": "chg-3943",
+       "observation": "chg-3943 set LOG_LEVEL=DEBUG on worker for an invoice sync investigation"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert worker log level from DEBUG back to INFO to stop excessive logging filling /var/log.",
+      "commands": [
+       "kubectl set env deployment/worker LOG_LEVEL=INFO"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "kubectl set env deployment/worker LOG_LEVEL=DEBUG"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s04-nginx-logrotate-broken",
+   "alert": "DiskSpaceLow",
+   "service": "nginx",
+   "label": {
+    "category": "log_volume",
+    "culprits": [
+     "cron:logrotate",
+     "chg-5977"
+    ]
+   },
+   "rules_alert": {
+    "category": "log_volume",
+    "culprit": "none",
+    "category_ok": true,
+    "culprit_ok": false,
+    "ms": 4.97
+   },
+   "rules_logs": {
+    "category": "log_volume",
+    "culprit": "none",
+    "category_ok": true,
+    "culprit_ok": false,
+    "ms": 55.09
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 5,
+    "cache_hits": 5,
+    "tool_calls": 10,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "query_logs",
+     "list_metrics",
+     "query_metric",
+     "query_logs",
+     "get_change",
+     "read_runbook",
+     "list_cron_runs",
+     "list_changes"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 17264,
+    "completion_tokens": 759,
+    "time_to_report_s": 10.58,
+    "model_latency_s": 10.53,
+    "tool_time_s": 0.047,
+    "category": "config_error",
+    "culprit": "chg-5977",
+    "confidence": 1.0,
+    "category_ok": false,
+    "culprit_ok": true,
+    "evidence_total": 4,
+    "evidence_grounded": 4,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "Disk space on nginx reached 91% full because log rotation failed due to a typo in the logrotate configuration.",
+     "affected_service": "nginx",
+     "root_cause": {
+      "category": "config_error",
+      "culprit": "chg-5977",
+      "explanation": "Change chg-5977 introduced a typo ('compresss' instead of 'compress') in the nginx logrotate configuration file. As a result, logrotate failed, logs accumulated without rotation or compression, and the filesystem reached 91% capacity."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "cron",
+       "service": "nginx",
+       "ref": "logrotate",
+       "observation": "error: /etc/logrotate.d/nginx:4 unknown option 'compresss' -- ignoring line; error: found error in /var/log/nginx/*.log , skipping"
+      },
+      {
+       "kind": "change",
+       "service": "nginx",
+       "ref": "chg-5977",
+       "observation": "chg-5977 introduced typo 'compresss' in logrotate config"
+      },
+      {
+       "kind": "metric",
+       "service": "nginx",
+       "ref": "node_filesystem_used_ratio",
+       "observation": "node_filesystem_used_ratio reached 91% (0.91) and growing steadily"
+      },
+      {
+       "kind": "log",
+       "service": "nginx",
+       "ref": "upstream response is buffered to a temporary file /var/cache/nginx/proxy_temp/8/056",
+       "observation": "upstream response is buffered to a temporary file /var/cache/nginx/proxy_temp/8/056"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Fix typo 'compresss' to 'compress' in /etc/logrotate.d/nginx to allow log rotation to succeed, and force a log rotation.",
+      "commands": [
+       "logrotate -f /etc/logrotate.d/nginx"
+      ],
+      "config_diff": "--- /etc/logrotate.d/nginx\n+++ /etc/logrotate.d/nginx\n@@ -1,4 +1,4 @@\n /var/log/nginx/*.log {\n     daily\n-    compresss\n+    compress\n     delaycompress\n     rotate 7\n }",
+      "rollback": [
+       "sed -i 's/compress/compresss/' /etc/logrotate.d/nginx"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s05-worker-memory-leak",
+   "alert": "ContainerRestarting",
+   "service": "worker",
+   "label": {
+    "category": "memory_leak",
+    "culprits": [
+     "chg-3479"
+    ]
+   },
+   "rules_alert": {
+    "category": "memory_leak",
+    "culprit": "chg-3479",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 6.08
+   },
+   "rules_logs": {
+    "category": "memory_leak",
+    "culprit": "chg-3479",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 64.84
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 9,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "get_change",
+     "list_metrics",
+     "query_metric",
+     "query_metric",
+     "query_metric"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 14532,
+    "completion_tokens": 769,
+    "time_to_report_s": 8.36,
+    "model_latency_s": 8.28,
+    "tool_time_s": 0.077,
+    "category": "memory_leak",
+    "culprit": "chg-3479",
+    "confidence": 0.95,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 4,
+    "evidence_grounded": 4,
+    "evidence_supporting": 4,
+    "report": {
+     "what_broke": "The background worker container was OOMKilled and restarted due to an unbounded in-process customer cache introduced in v3.9.0.",
+     "affected_service": "worker",
+     "root_cause": {
+      "category": "memory_leak",
+      "culprit": "chg-3479",
+      "explanation": "Commit chg-3479 added an unbounded global dict (`_customer_cache`) in `worker/invoices.py` to cache customer records in-process. Since the cache has no size limit, TTL, or eviction policy, it accumulates entries indefinitely as background jobs run, eventually exhausting the container's memory limit and causing an OOM kill."
+     },
+     "confidence": 0.95,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "2026-09-14T09:21:02Z ERROR Worker exited with signal 9 (OOMKilled), restarting",
+       "observation": "Worker exited with signal 9 (OOMKilled), restarting"
+      },
+      {
+       "kind": "change",
+       "service": "worker",
+       "ref": "chg-3479",
+       "observation": "worker v3.9.0 introduced an unBounded in-process customer cache in invoices.py without eviction, causing memory to grow unboundedly over time until OOM kill."
+      },
+      {
+       "kind": "metric",
+       "service": "worker",
+       "ref": "process_resident_memory_bytes",
+       "observation": "process_resident_memory_bytes climbed steadily up to 1.90Gi before the container restart at ~09:21 UTC and started climbing again from ~616Mi."
+      },
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "2026-09-14T10:10:00Z WARN invoice customer cache holds 218730 entries",
+       "observation": "invoice customer cache holds 218730 entries"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert chg-3479 to remove the unbounded in-process customer cache and restore database lookups (or implement TTL/LRU eviction).",
+      "commands": [
+       "git revert chg-3479",
+       "git push origin main"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git cherry-pick chg-3479",
+       "git push origin main"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s06-api-memory-leak",
+   "alert": "HighMemoryUsage",
+   "service": "api",
+   "label": {
+    "category": "memory_leak",
+    "culprits": [
+     "chg-6781"
+    ]
+   },
+   "rules_alert": {
+    "category": "memory_leak",
+    "culprit": "chg-6781",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 4.99
+   },
+   "rules_logs": {
+    "category": "memory_leak",
+    "culprit": "chg-6781",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 39.13
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 8,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "query_logs",
+     "list_metrics",
+     "get_change",
+     "query_metric",
+     "query_metric",
+     "read_runbook"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 9222,
+    "completion_tokens": 604,
+    "time_to_report_s": 7.24,
+    "model_latency_s": 7.2,
+    "tool_time_s": 0.039,
+    "category": "memory_leak",
+    "culprit": "chg-6781",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "The API service experienced a memory leak causing high memory usage and near container limit exhaustion due to an unbounded list growing PDF renderer objects.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "memory_leak",
+      "culprit": "chg-6781",
+      "explanation": "Change chg-6781 introduced a memory leak by globally appending every created Renderer instance to an unbounded list (_renderers.append(r)) for invoice PDFs instead of properly reusing a fixed pool, causing resident memory to grow continuously until hitting the container memory limit."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "process_resident_memory_bytes",
+       "observation": "process_resident_memory_bytes grew steadily from ~780Mi to ~969Mi over 2 hours"
+      },
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "2026-09-14T10:20:00Z WARN  pdf renderer pool holds 423 renderers (expected <= 8)",
+       "observation": "pdf renderer pool holds 423 renderers (expected <= 8)"
+      },
+      {
+       "kind": "change",
+       "service": "",
+       "ref": "chg-6781",
+       "observation": "chg-6781 introduced an un-bounded list appending Renderer instances (_renderers.append(r)) without ever cleaning them up or limiting the pool size."
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert chg-6781 to stop appending PDF renderers to the unbounded global list, fixing the memory leak.",
+      "commands": [
+       "git revert chg-6781"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git cherry-pick chg-6781"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s07-api-pool-exhausted",
+   "alert": "HighLatency",
+   "service": "api",
+   "label": {
+    "category": "connection_pool_exhausted",
+    "culprits": [
+     "chg-4529"
+    ]
+   },
+   "rules_alert": {
+    "category": "slow_query",
+    "culprit": "chg-4529",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 4.69
+   },
+   "rules_logs": {
+    "category": "connection_pool_exhausted",
+    "culprit": "chg-4529",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 40.48
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 11,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_metrics",
+     "list_metrics",
+     "query_logs",
+     "list_cron_runs",
+     "get_change",
+     "query_metric",
+     "query_metric",
+     "query_logs",
+     "read_runbook"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 10617,
+    "completion_tokens": 858,
+    "time_to_report_s": 7.48,
+    "model_latency_s": 7.39,
+    "tool_time_s": 0.091,
+    "category": "connection_pool_exhausted",
+    "culprit": "chg-4529",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 4,
+    "evidence_grounded": 4,
+    "evidence_supporting": 4,
+    "report": {
+     "what_broke": "p95 latency on the API spiked due to database connection pool exhaustion caused by long-held connections during monthly report exports.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "connection_pool_exhausted",
+      "culprit": "chg-4529",
+      "explanation": "Change chg-4529 wrapped the report export generator in session.begin() and streamed rows while holding the transaction open. This holds a database connection from the pool for the entire duration of the client download (which can take thousands of seconds), eventually exhausting the connection pool limit of 20 and causing all subsequent API requests to time out waiting for a connection."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "2026-09-14T10:29:52Z ERROR sqlalchemy.exc.TimeoutError: QueuePool limit of size 20 overflow 0 reached, connection timed out, timeout 30.00",
+       "observation": "sqlalchemy.exc.TimeoutError: QueuePool limit of size 20 overflow 0 reached, connection timed out, timeout 30.00"
+      },
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "2026-09-14T10:26:48Z WARN  slow request GET /api/reports/export?month=2026-08 took 3299.2s request_id=7f55df21",
+       "observation": "slow request GET /api/reports/export?month=2026-08 took 3299.2s"
+      },
+      {
+       "kind": "change",
+       "service": "api",
+       "ref": "chg-4529",
+       "observation": "chg-4529 added session.begin() around export_monthly streaming, holding database connection open during slow client downloads"
+      },
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "db_pool_connections_in_use",
+       "observation": "db_pool_connections_in_use reached max of 20 and stayed pinned there since right after chg-4529 deploy"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert chg-4529 which holds the database connection open during client download in export_monthly, exhausting the connection pool.",
+      "commands": [
+       "git revert chg-4529",
+       "kubectl rollout restart deployment/api"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git cherry-pick chg-4529"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s08-postgres-max-connections",
+   "alert": "HighErrorRate",
+   "service": "api",
+   "label": {
+    "category": "db_connection_limit",
+    "culprits": [
+     "chg-2645"
+    ]
+   },
+   "rules_alert": {
+    "category": "code_regression",
+    "culprit": "none",
+    "category_ok": false,
+    "culprit_ok": false,
+    "ms": 5.41
+   },
+   "rules_logs": {
+    "category": "db_connection_limit",
+    "culprit": "none",
+    "category_ok": true,
+    "culprit_ok": false,
+    "ms": 39.01
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 10,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_metrics",
+     "query_logs",
+     "get_change",
+     "query_metric",
+     "query_metric",
+     "query_logs",
+     "list_cron_runs",
+     "query_logs"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 13988,
+    "completion_tokens": 782,
+    "time_to_report_s": 9.66,
+    "model_latency_s": 9.5,
+    "tool_time_s": 0.16,
+    "category": "db_connection_limit",
+    "culprit": "chg-2645",
+    "confidence": 0.95,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 4,
+    "evidence_grounded": 4,
+    "evidence_supporting": 4,
+    "report": {
+     "what_broke": "The API service experienced a high error rate (5xx) because PostgreSQL ran out of connections due to an excessive worker concurrency setting.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "db_connection_limit",
+      "culprit": "chg-2645",
+      "explanation": "Change chg-2645 raised WORKER_CONCURRENCY to 64. Each worker process/thread attempts to establish a large number of connections to PostgreSQL, exhausting PostgreSQL's max_connections limit and causing both the API and worker to fail with 'sorry, too many clients already'."
+     },
+     "confidence": 0.95,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "psycopg2.OperationalError: connection to server at \"postgres\" (10.0.2.20), port 5432 failed: FATAL:  sorry, too many clients already",
+       "observation": "psycopg2.OperationalError: connection to server at 'postgres' (10.0.2.20), port 5432 failed: FATAL: sorry, too many clients already"
+      },
+      {
+       "kind": "change",
+       "service": "worker",
+       "ref": "chg-2645",
+       "observation": "worker: raise concurrency for the sale backlog (worker concurrency raised to 64)"
+      },
+      {
+       "kind": "log",
+       "service": "postgres",
+       "ref": "FATAL:  sorry, too many clients already",
+       "observation": "FATAL: sorry, too many clients already in postgres logs"
+      },
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "psycopg2.OperationalError: connection to server at \"postgres\" (10.0.2.20), port 5432 failed: FATAL:  sorry, too many clients already",
+       "observation": "psycopg2.OperationalError in worker logs due to max connections exhausted"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert worker concurrency increase from chg-2645 to prevent exhausting PostgreSQL max_connections.",
+      "commands": [
+       "git revert chg-2645",
+       "kubectl rollout restart deploy/worker -n shop"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git cherry-pick chg-2645",
+       "kubectl rollout restart deploy/worker -n shop"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s09-nginx-cert-expired",
+   "alert": "ProbeFailed",
+   "service": "nginx",
+   "label": {
+    "category": "certificate_expired",
+    "culprits": [
+     "cron:certbot-renew",
+     "chg-4026"
+    ]
+   },
+   "rules_alert": {
+    "category": "config_error",
+    "culprit": "none",
+    "category_ok": false,
+    "culprit_ok": false,
+    "ms": 4.9
+   },
+   "rules_logs": {
+    "category": "certificate_expired",
+    "culprit": "none",
+    "category_ok": true,
+    "culprit_ok": false,
+    "ms": 57.39
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 5,
+    "cache_hits": 5,
+    "tool_calls": 13,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_metrics",
+     "list_metrics",
+     "query_metric",
+     "query_metric",
+     "query_logs",
+     "query_logs",
+     "read_runbook",
+     "read_runbook",
+     "list_cron_runs",
+     "get_change",
+     "get_change"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 16393,
+    "completion_tokens": 765,
+    "time_to_report_s": 10.73,
+    "model_latency_s": 10.59,
+    "tool_time_s": 0.141,
+    "category": "certificate_expired",
+    "culprit": "cron:certbot-renew",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "Synthetic probe failing because the TLS certificate for shop.acme.test expired and handshakes are rejected.",
+     "affected_service": "nginx",
+     "root_cause": {
+      "category": "certificate_expired",
+      "culprit": "cron:certbot-renew",
+      "explanation": "The TLS certificate for shop.acme.test expired because the automated certbot renewal cron job failed due to a DNS lookup error for the ACME challenge."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "metric",
+       "service": "nginx",
+       "ref": "ssl_certificate_expiry_days",
+       "observation": "ssl_certificate_expiry_days dropped below zero (now -0.0163 days)"
+      },
+      {
+       "kind": "log",
+       "service": "nginx",
+       "ref": "2026-09-14T10:29:56Z ERROR SSL_do_handshake() failed (SSL: error:0A000415:SSL routines::sslv3 alert certificate expired:SSL alert number 45) while SSL handshaking, client: 10.0.249.17",
+       "observation": "ERROR SSL_do_handshake() failed (SSL: error:0A000415:SSL routines::sslv3 alert certificate expired:SSL alert number 45) while SSL handshaking"
+      },
+      {
+       "kind": "cron",
+       "service": "nginx",
+       "ref": "cron:certbot-renew",
+       "observation": "cron:certbot-renew failed with DNS problem: NXDOMAIN looking up TXT for _acme-challenge.shop.acme.test"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Renew the expired TLS certificate for shop.acme.test using certbot (after verifying DNS TXT records or using HTTP-01 challenge).",
+      "commands": [
+       "certbot renew --force-renewal"
+      ],
+      "config_diff": "# Manual certificate renewal or DNS fix required for shop.acme.test",
+      "rollback": [],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s10-cert-expiring",
+   "alert": "CertificateExpiringSoon",
+   "service": "nginx",
+   "label": {
+    "category": "certificate_expiring",
+    "culprits": [
+     "cron:certbot-renew",
+     "none"
+    ]
+   },
+   "rules_alert": {
+    "category": "certificate_expiring",
+    "culprit": "none",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 5.4
+   },
+   "rules_logs": {
+    "category": "certificate_expiring",
+    "culprit": "none",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 48.52
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 6,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "read_runbook",
+     "query_logs"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 11915,
+    "completion_tokens": 659,
+    "time_to_report_s": 8.64,
+    "model_latency_s": 8.62,
+    "tool_time_s": 0.014,
+    "category": "certificate_expiring",
+    "culprit": "none",
+    "confidence": 0.95,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 2,
+    "report": {
+     "what_broke": "The TLS certificate for api.acme.test is expiring soon and needs manual or automated renewal.",
+     "affected_service": "nginx",
+     "root_cause": {
+      "category": "certificate_expiring",
+      "culprit": "none",
+      "explanation": "The TLS certificate for api.acme.test is a manually installed certificate (not managed by the automated certbot-renew cron job) and is expiring in 6.6 days."
+     },
+     "confidence": 0.95,
+     "evidence": [
+      {
+       "kind": "cron",
+       "service": "nginx",
+       "ref": "cron:certbot-renew",
+       "observation": "cron:certbot-renew cron job runs certbot on shop.acme.test.conf, but does not cover api.acme.test"
+      },
+      {
+       "kind": "log",
+       "service": "nginx",
+       "ref": "2026-09-14T05:30:00Z INFO  certificate /etc/nginx/certs/api.acme.test.pem loaded (manual install, not managed by certbot)",
+       "observation": "certificate /etc/nginx/certs/api.acme.test.pem loaded (manual install, not managed by certbot)"
+      },
+      {
+       "kind": "health",
+       "service": "nginx",
+       "ref": "nginx",
+       "observation": "nginx service is currently healthy but warning that api.acme.test certificate expires in 6.6 days"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Renew the manually installed TLS certificate for api.acme.test via certbot and reload Nginx.",
+      "commands": [
+       "certbot certonly --webroot -w /var/www/html -d api.acme.test",
+       "cp /etc/letsencrypt/live/api.acme.test/fullchain.pem /etc/nginx/certs/api.acme.test.pem",
+       "cp /etc/letsencrypt/live/api.acme.test/privkey.pem /etc/nginx/certs/api.acme.test.key",
+       "nginx -s reload"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "cp /etc/nginx/certs/api.acme.test.pem.bak /etc/nginx/certs/api.acme.test.pem",
+       "nginx -s reload"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s11-worker-dns-resolv",
+   "alert": "JobFailureRateHigh",
+   "service": "worker",
+   "label": {
+    "category": "dns_resolution",
+    "culprits": [
+     "chg-7657"
+    ]
+   },
+   "rules_alert": {
+    "category": "code_regression",
+    "culprit": "chg-7657",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 6.63
+   },
+   "rules_logs": {
+    "category": "dns_resolution",
+    "culprit": "chg-7657",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 42.06
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 7,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "get_change",
+     "list_metrics",
+     "query_logs"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 9277,
+    "completion_tokens": 723,
+    "time_to_report_s": 7.0,
+    "model_latency_s": 6.95,
+    "tool_time_s": 0.051,
+    "category": "dns_resolution",
+    "culprit": "chg-7657",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "Worker jobs are failing due to DNS resolution failures for external endpoints after a node image update.",
+     "affected_service": "worker",
+     "root_cause": {
+      "category": "dns_resolution",
+      "culprit": "chg-7657",
+      "explanation": "Change chg-7657 updated the worker node pool's image, changing /etc/resolv.conf nameserver from 10.0.0.2 to 10.0.0.53. This broke DNS resolution for external services like payments and mailers, causing background worker jobs to fail."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "2026-09-14T10:29:51Z ERROR httpx.ConnectError: [Errno -3] Temporary failure in name resolution (host: api.payments-provider.test)",
+       "observation": "ERROR httpx.ConnectError: [Errno -3] Temporary failure in name resolution (host: api.payments-provider.test)"
+      },
+      {
+       "kind": "change",
+       "service": "worker",
+       "ref": "chg-7657",
+       "observation": "chg-7657 changed the worker node pool resolv.conf nameserver to 10.0.0.53, which is invalid/unreachable."
+      },
+      {
+       "kind": "metric",
+       "service": "worker",
+       "ref": "jobs_failed_ratio",
+       "observation": "jobs_failed_ratio spiked around 61% after the node image refresh at 09:55 UTC."
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert node image change chg-7657 or fix the nameserver IP in resolv.conf back to 10.0.0.2.",
+      "commands": [
+       "kubectl patch daemonset worker-node-resolv -p '{\"spec\":{\"template\":{\"spec\":{\"dnsPolicy\":\"ClusterFirst\"}}}}' # or revert node image / fix resolv.conf nameserver back to 10.0.0.2"
+      ],
+      "config_diff": "--- a/images/worker-node/etc/resolv.conf\n+++ b/images/worker-node/etc/resolv.conf\n@@ -1,2 +1,2 @@\n-nameserver 10.0.0.53\n+nameserver 10.0.0.2\n search svc.cluster.local",
+      "rollback": [
+       "git revert chg-7657 && ci-deploy"
+      ],
+      "risk": "medium"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s12-backup-cron-noisy",
+   "alert": "HighLatency",
+   "service": "api",
+   "label": {
+    "category": "noisy_neighbour",
+    "culprits": [
+     "cron:pg-backup",
+     "chg-6055"
+    ]
+   },
+   "rules_alert": {
+    "category": "slow_query",
+    "culprit": "none",
+    "category_ok": false,
+    "culprit_ok": false,
+    "ms": 5.15
+   },
+   "rules_logs": {
+    "category": "slow_query",
+    "culprit": "none",
+    "category_ok": false,
+    "culprit_ok": false,
+    "ms": 28.89
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 5,
+    "cache_hits": 5,
+    "tool_calls": 19,
+    "tools_used": [
+     "check_health",
+     "check_health",
+     "check_health",
+     "check_health",
+     "list_metrics",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "query_metric",
+     "query_metric",
+     "query_metric",
+     "query_metric",
+     "query_logs",
+     "get_change",
+     "get_change",
+     "query_metric",
+     "query_metric",
+     "query_metric",
+     "query_metric"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 20571,
+    "completion_tokens": 1318,
+    "time_to_report_s": 13.32,
+    "model_latency_s": 13.23,
+    "tool_time_s": 0.085,
+    "category": "noisy_neighbour",
+    "culprit": "chg-6055",
+    "confidence": 0.99,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 5,
+    "evidence_grounded": 5,
+    "evidence_supporting": 4,
+    "report": {
+     "what_broke": "API request p95 latency increased to ~2.9 seconds.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "noisy_neighbour",
+      "culprit": "chg-6055",
+      "explanation": "Change chg-6055 moved the daily database backup (pg_backup.sh with pg_dump --jobs=4) from 02:00 UTC to 09:45 UTC. The heavy backup causes high disk I/O (iowait) and slow database queries on Postgres during peak business hours, causing API requests to experience high p95 latency."
+     },
+     "confidence": 0.99,
+     "evidence": [
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "http_request_duration_p95_seconds",
+       "observation": "http_request_duration_p95_seconds jumped from ~0.23s to 2.87s around 09:45 UTC"
+      },
+      {
+       "kind": "change",
+       "service": "postgres",
+       "ref": "chg-6055",
+       "observation": "chg-6055 moved pg-backup cron job from 02:00 to 09:45 UTC"
+      },
+      {
+       "kind": "cron",
+       "service": "postgres",
+       "ref": "cron:pg-backup",
+       "observation": "cron:pg-backup started at 09:45 UTC and is currently running (pg_dump --jobs=4 shop)"
+      },
+      {
+       "kind": "metric",
+       "service": "postgres",
+       "ref": "pg_slow_queries_per_minute",
+       "observation": "pg_slow_queries_per_minute increased from ~0.2 to ~14.4 per minute starting at 09:45 UTC"
+      },
+      {
+       "kind": "log",
+       "service": "postgres",
+       "ref": "2026-09-14T10:29:36Z WARN  LOG:  duration: 2979.448 ms  statement: SELECT o.* FROM orders o JOIN order_items i ON i.order_id = o.id WHERE o.id = $1",
+       "observation": "LOG: duration: 2979.448 ms statement: SELECT o.* FROM orders o JOIN order_items i ON i.order_id = o.id WHERE o.id = $1"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert chg-6055 to move the heavy pg-backup cron job back to 02:00 UTC instead of running during peak hours (09:45 UTC), relieving I/O load and high API latency.",
+      "commands": [
+       "git revert chg-6055",
+       "# or update crontab to move pg-backup back to off-peak hours (e.g., 02:00)"
+      ],
+      "config_diff": "--- a/cron/postgres.crontab\n+++ b/cron/postgres.crontab\n@@ -1 +1 @@\n-45 9 * * *  /opt/backup/pg-backup.sh\n+0 2 * * *   /opt/backup/pg-backup.sh\n",
+      "rollback": [
+       "git cherry-pick chg-6055"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s13-invoices-cron-failed",
+   "alert": "CronJobFailed",
+   "service": "worker",
+   "label": {
+    "category": "cron_failure",
+    "culprits": [
+     "cron:nightly-invoices",
+     "chg-7506"
+    ]
+   },
+   "rules_alert": {
+    "category": "cron_failure",
+    "culprit": "cron:nightly-invoices",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 3.0
+   },
+   "rules_logs": {
+    "category": "cron_failure",
+    "culprit": "cron:nightly-invoices",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 35.13
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 6,
+    "tools_used": [
+     "list_cron_runs",
+     "list_changes",
+     "query_logs",
+     "check_health",
+     "get_change",
+     "query_logs"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 8962,
+    "completion_tokens": 551,
+    "time_to_report_s": 6.76,
+    "model_latency_s": 6.67,
+    "tool_time_s": 0.09,
+    "category": "code_regression",
+    "culprit": "chg-7506",
+    "confidence": 0.95,
+    "category_ok": false,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 2,
+    "evidence_supporting": 2,
+    "report": {
+     "what_broke": "Nightly invoice generation failed due to a KeyError on customer tax region.",
+     "affected_service": "worker",
+     "root_cause": {
+      "category": "code_regression",
+      "culprit": "chg-7506",
+      "explanation": "Commit chg-7506 introduced a code regression in worker/invoices.py by changing order.customer.region to order.customer.extra[\"tax_region\"], causing KeyError when generating nightly invoices."
+     },
+     "confidence": 0.95,
+     "evidence": [
+      {
+       "kind": "cron",
+       "service": "worker",
+       "ref": "nightly-invoices",
+       "observation": "Job nightly-invoices exited with a non-zero status (KeyError: 'tax_region')"
+      },
+      {
+       "kind": "change",
+       "service": "worker",
+       "ref": "chg-7506",
+       "observation": "chg-7506 changed order.customer.region to order.customer.extra['tax_region'] in worker/invoices.py"
+      },
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "    | KeyError: 'tax_region'",
+       "observation": "Traceback (most recent call last): File \"/app/worker/invoices.py\", line 61, in invoice_lines region = order.customer.extra[\"tax_region\"] KeyError: 'tax_region'"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert code change chg-7506 which incorrectly accessed customer tax region via extra dict instead of attribute, causing a KeyError during nightly invoice generation.",
+      "commands": [
+       "git revert chg-7506",
+       "kubectl rollout restart deploy/worker"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git revert --no-commit HEAD",
+       "git commit -m \"revert chg-7506\"",
+       "kubectl rollout restart deploy/worker"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s14-missing-index",
+   "alert": "HighLatency",
+   "service": "api",
+   "label": {
+    "category": "slow_query",
+    "culprits": [
+     "chg-2856"
+    ]
+   },
+   "rules_alert": {
+    "category": "slow_query",
+    "culprit": "chg-2856",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 29.88
+   },
+   "rules_logs": {
+    "category": "slow_query",
+    "culprit": "chg-2856",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 35.34
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 14,
+    "tools_used": [
+     "check_health",
+     "check_health",
+     "check_health",
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "list_metrics",
+     "list_metrics",
+     "get_change",
+     "query_metric",
+     "query_metric",
+     "query_metric",
+     "query_logs",
+     "read_runbook"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 14740,
+    "completion_tokens": 894,
+    "time_to_report_s": 9.95,
+    "model_latency_s": 9.91,
+    "tool_time_s": 0.048,
+    "category": "code_regression",
+    "culprit": "chg-2856",
+    "confidence": 0.95,
+    "category_ok": false,
+    "culprit_ok": true,
+    "evidence_total": 4,
+    "evidence_grounded": 4,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "API request p95 latency spiked to ~4.8s due to missing database index on orders table.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "code_regression",
+      "culprit": "chg-2856",
+      "explanation": "Change chg-2856 dropped the composite index ix_orders_customer_id(customer_id, created_at) needed by customer order and reporting queries, replacing it with a single-column index on created_at. This caused frequent sequential scans and a massive spike in database slow queries, resulting in high p95 API latency."
+     },
+     "confidence": 0.95,
+     "evidence": [
+      {
+       "kind": "change",
+       "service": "api",
+       "ref": "chg-2856",
+       "observation": "chg-2856 dropped the composite index ix_orders_customer_id (customer_id, created_at) and replaced it with ix_orders_created_at on the orders table at 09:10 UTC"
+      },
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "http_request_duration_p95_seconds",
+       "observation": "p95 request duration jumped from ~0.23s to ~4.8s immediately following change chg-2856 at 09:10 UTC"
+      },
+      {
+       "kind": "metric",
+       "service": "postgres",
+       "ref": "pg_slow_queries_per_minute",
+       "observation": "Postgres slow queries per minute jumped from ~0.2/min to over 40/min right after chg-2856 was deployed"
+      },
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "2026-09-14T10:15:50Z WARN  slow request GET /api/reports/monthly took 1.7s request_id=4e38dca8",
+       "observation": "Slow request warnings appearing for customer and report endpoints scanning orders without the proper composite index"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert migration change chg-2856 which incorrectly replaced the composite index ix_orders_customer_id with ix_orders_created_at, causing slow queries and high p95 latency.",
+      "commands": [
+       "git revert chg-2856",
+       "kubectl rollout restart deploy/api"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git cherry-pick chg-2856"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s15-payments-upstream",
+   "alert": "HighLatency",
+   "service": "api",
+   "label": {
+    "category": "upstream_outage",
+    "culprits": [
+     "external:payments-provider"
+    ]
+   },
+   "rules_alert": {
+    "category": "slow_query",
+    "culprit": "chg-3051",
+    "category_ok": false,
+    "culprit_ok": false,
+    "ms": 23.19
+   },
+   "rules_logs": {
+    "category": "upstream_outage",
+    "culprit": "chg-3051",
+    "category_ok": true,
+    "culprit_ok": false,
+    "ms": 60.71
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 10,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "query_logs",
+     "query_logs",
+     "get_change",
+     "list_metrics",
+     "read_runbook",
+     "query_metric",
+     "list_cron_runs",
+     "list_changes"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 12613,
+    "completion_tokens": 611,
+    "time_to_report_s": 9.93,
+    "model_latency_s": 9.84,
+    "tool_time_s": 0.086,
+    "category": "upstream_outage",
+    "culprit": "external:payments-provider",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 2,
+    "evidence_grounded": 2,
+    "evidence_supporting": 2,
+    "report": {
+     "what_broke": "p95 request latency on the api service is high due to upstream payment provider timeouts.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "upstream_outage",
+      "culprit": "external:payments-provider",
+      "explanation": "The third-party payment provider API (api.payments-provider.test) experienced severe degradation / outage, causing all charge requests to time out and driving up p95 latency on the api service."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "2026-09-14T10:29:59Z ERROR payment provider timeout: POST https://api.payments-provider.test/v2/charges exceeded 10.0s (attempt 3/3) request_id=3ae3d711",
+       "observation": "payment provider timeout: POST https://api.payments-provider.test/v2/charges exceeded 10.0s (attempt 3/3)"
+      },
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "upstream_payments_p95_seconds",
+       "observation": "upstream_payments_p95_seconds jumped from ~0.44s to ~10.0s at 10:40 (40m ago), matching alert timing"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "The upstream payment provider service is experiencing an outage / high latency, causing API requests to time out after 10 seconds.",
+      "commands": [
+       "echo \"Third-party payment provider outage\""
+      ],
+      "config_diff": "",
+      "rollback": [
+       "echo \"no rollback needed\""
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s16-db-password-rotated",
+   "alert": "QueueBacklogHigh",
+   "service": "worker",
+   "label": {
+    "category": "credentials_mismatch",
+    "culprits": [
+     "chg-9155"
+    ]
+   },
+   "rules_alert": {
+    "category": "resource_limits",
+    "culprit": "chg-7136",
+    "category_ok": false,
+    "culprit_ok": false,
+    "ms": 8.5
+   },
+   "rules_logs": {
+    "category": "credentials_mismatch",
+    "culprit": "chg-7136",
+    "category_ok": true,
+    "culprit_ok": false,
+    "ms": 32.74
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 10,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "list_metrics",
+     "get_change",
+     "query_metric",
+     "query_logs",
+     "read_runbook",
+     "read_runbook"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 13497,
+    "completion_tokens": 596,
+    "time_to_report_s": 9.72,
+    "model_latency_s": 9.64,
+    "tool_time_s": 0.083,
+    "category": "credentials_mismatch",
+    "culprit": "chg-9155",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "Worker queue backlog is high and rising because the background worker cannot authenticate with PostgreSQL after a password rotation.",
+     "affected_service": "worker",
+     "root_cause": {
+      "category": "credentials_mismatch",
+      "culprit": "chg-9155",
+      "explanation": "Vault rotated the database password for the worker role (chg-9155 at 09:35 UTC), but the running worker pods still held the old password in memory/environment, causing continuous authentication failures and a rapidly growing queue backlog."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "2026-09-14T10:29:41Z ERROR psycopg2.OperationalError: connection to server at \"postgres\" (10.0.2.20), port 5432 failed: FATAL:  password authentication failed for user \"worker\"",
+       "observation": "password authentication failed for user worker"
+      },
+      {
+       "kind": "change",
+       "service": "postgres",
+       "ref": "chg-9155",
+       "observation": "rotated postgres password for role worker via vault-rotator"
+      },
+      {
+       "kind": "metric",
+       "service": "worker",
+       "ref": "queue_depth",
+       "observation": "queue depth started rising sharply at 09:35 UTC immediately following chg-9155"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Restart the worker deployment so it picks up the newly rotated database password from Vault.",
+      "commands": [
+       "kubectl rollout restart deployment/worker -n shop"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "kubectl rollout undo deployment/worker -n shop"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s17-api-cpu-limit",
+   "alert": "HighLatency",
+   "service": "api",
+   "label": {
+    "category": "resource_limits",
+    "culprits": [
+     "chg-3125"
+    ]
+   },
+   "rules_alert": {
+    "category": "slow_query",
+    "culprit": "chg-3125",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 5.35
+   },
+   "rules_logs": {
+    "category": "slow_query",
+    "culprit": "chg-3125",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 36.81
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 9,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "list_metrics",
+     "query_logs",
+     "get_change",
+     "query_metric",
+     "query_metric",
+     "query_metric"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 10351,
+    "completion_tokens": 772,
+    "time_to_report_s": 7.61,
+    "model_latency_s": 7.55,
+    "tool_time_s": 0.067,
+    "category": "resource_limits",
+    "culprit": "chg-3125",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 4,
+    "evidence_grounded": 4,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "API p95 latency spiked to over 3 seconds due to severe CPU throttling caused by an overly restrictive CPU limit.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "resource_limits",
+      "culprit": "chg-3125",
+      "explanation": "Commit chg-3125 reduced the API CPU limit from \"2\" to \"500m\". This caused severe CPU throttling (throttled ratio > 70%), blocking event loops and causing p95 request latency to jump from ~0.23s to over 3s."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "change",
+       "service": "api",
+       "ref": "chg-3125",
+       "observation": "Commit chg-3125 changed API CPU limit from 2 to 500m at 2026-09-14T09:25:00Z, perfectly coinciding with the start of high latency."
+      },
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "http_request_duration_p95_seconds",
+       "observation": "http_request_duration_p95_seconds jumped from ~0.23s to ~3.1s immediately after the change."
+      },
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "container_cpu_throttled_ratio",
+       "observation": "container_cpu_throttled_ratio spiked from ~1% to over 70% following the CPU limit reduction."
+      },
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "2026-09-14T10:29:48Z WARN  event loop blocked for 5746ms (gunicorn worker 3)",
+       "observation": "event loop blocked for 5746ms (gunicorn worker 3)"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Restore the API CPU limit to 2 cores in k8s/api/deployment.yaml (or via kubectl) to eliminate CPU throttling.",
+      "commands": [
+       "kubectl set resources deployment/api -c api --limits=cpu=2"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "kubectl set resources deployment/api -c api --limits=cpu=500m"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s18-worker-oom-limit",
+   "alert": "ContainerRestarting",
+   "service": "worker",
+   "label": {
+    "category": "resource_limits",
+    "culprits": [
+     "chg-6781"
+    ]
+   },
+   "rules_alert": {
+    "category": "memory_leak",
+    "culprit": "chg-6781",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 5.93
+   },
+   "rules_logs": {
+    "category": "memory_leak",
+    "culprit": "chg-6781",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 35.24
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 8,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "get_change",
+     "list_metrics",
+     "query_metric",
+     "query_metric"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 13408,
+    "completion_tokens": 617,
+    "time_to_report_s": 8.13,
+    "model_latency_s": 8.09,
+    "tool_time_s": 0.04,
+    "category": "resource_limits",
+    "culprit": "chg-6781",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 4,
+    "evidence_grounded": 4,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "The background worker container is repeatedly restarting due to being OOM-killed after its memory limit was set too low.",
+     "affected_service": "worker",
+     "root_cause": {
+      "category": "resource_limits",
+      "culprit": "chg-6781",
+      "explanation": "Change chg-6781 reduced the worker deployment's memory limit to 512Mi, but the worker process normally consumes around 630-645Mi of memory. This caused the container to be repeatedly OOM-killed and restart in a CrashLoopBackOff state."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "change",
+       "service": "worker",
+       "ref": "chg-6781",
+       "observation": "chg-6781 lowered the worker memory limit from 2Gi to 512Mi"
+      },
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "Worker exited with signal 9 (OOMKilled), restarting",
+       "observation": "Worker exited with signal 9 (OOMKilled), restarting"
+      },
+      {
+       "kind": "metric",
+       "service": "worker",
+       "ref": "process_resident_memory_bytes",
+       "observation": "process_resident_memory_bytes hovered around 630-645Mi, which exceeds the new 512Mi memory limit"
+      },
+      {
+       "kind": "health",
+       "service": "worker",
+       "ref": "worker",
+       "observation": "worker degraded (CrashLoopBackOff: OOMKilled 7 times in 40m)"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Restore worker memory limit to 2Gi in Kubernetes deployment.",
+      "commands": [
+       "kubectl -n shop set resources deployment/worker --limits=memory=2Gi"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "kubectl -n shop set resources deployment/worker --limits=memory=512Mi"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s19-clock-skew",
+   "alert": "HighErrorRate",
+   "service": "api",
+   "label": {
+    "category": "clock_skew",
+    "culprits": [
+     "chg-2694"
+    ]
+   },
+   "rules_alert": {
+    "category": "code_regression",
+    "culprit": "chg-2694",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 5.92
+   },
+   "rules_logs": {
+    "category": "clock_skew",
+    "culprit": "chg-2694",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 52.78
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 12,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "list_metrics",
+     "query_metric",
+     "query_logs",
+     "get_change",
+     "get_change",
+     "query_metric",
+     "query_logs",
+     "read_runbook",
+     "read_runbook"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 13877,
+    "completion_tokens": 802,
+    "time_to_report_s": 9.26,
+    "model_latency_s": 9.2,
+    "tool_time_s": 0.052,
+    "category": "clock_skew",
+    "culprit": "chg-2694",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 4,
+    "evidence_grounded": 4,
+    "evidence_supporting": 4,
+    "report": {
+     "what_broke": "API requests are failing with JWT signature validation errors (ImmatureSignatureError) due to clock drift on API nodes after chrony was removed.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "clock_skew",
+      "culprit": "chg-2694",
+      "explanation": "Change chg-2694 removed chrony from the node base image during a node image refresh. Without chrony running, the api host clocks drifted by several seconds, causing JWTs issued with 'iat' timestamps in the future relative to validating nodes/processes to fail validation with ImmatureSignatureError, resulting in a high 4xx error rate."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "change",
+       "service": "api",
+       "ref": "chg-2694",
+       "observation": "chg-2694 removed chrony from the node image refresh for api nodes"
+      },
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "node_timex_offset_seconds",
+       "observation": "node_timex_offset_seconds grew continuously to -3.58 seconds offset after chrony removal"
+      },
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "2026-09-14T10:29:50Z WARN  jwt.exceptions.ImmatureSignatureError: The token is not yet valid (iat) request_id=6eb50674",
+       "observation": "jwt.exceptions.ImmatureSignatureError: The token is not yet valid (iat)"
+      },
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "http_error_ratio",
+       "observation": "http_error_ratio rose to 18.7% over the last hour"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert the node image change that removed chrony from the api node base image, restoring time synchronization and preventing JWT ImmatureSignatureError caused by clock drift.",
+      "commands": [
+       "git revert chg-2694",
+       "kubectl rollout restart deploy/api -n shop"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git cherry-pick chg-2694"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s20-nginx-fd-exhaustion",
+   "alert": "HighErrorRate",
+   "service": "nginx",
+   "label": {
+    "category": "fd_exhaustion",
+    "culprits": [
+     "chg-3850"
+    ]
+   },
+   "rules_alert": {
+    "category": "code_regression",
+    "culprit": "chg-3850",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 6.15
+   },
+   "rules_logs": {
+    "category": "fd_exhaustion",
+    "culprit": "chg-3850",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 62.91
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 12,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_metrics",
+     "list_metrics",
+     "query_logs",
+     "query_logs",
+     "query_logs",
+     "query_logs",
+     "query_metric",
+     "query_metric",
+     "query_metric",
+     "get_change"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 13052,
+    "completion_tokens": 991,
+    "time_to_report_s": 8.96,
+    "model_latency_s": 8.83,
+    "tool_time_s": 0.135,
+    "category": "config_error",
+    "culprit": "chg-3850",
+    "confidence": 1.0,
+    "category_ok": false,
+    "culprit_ok": true,
+    "evidence_total": 4,
+    "evidence_grounded": 4,
+    "evidence_supporting": 4,
+    "report": {
+     "what_broke": "Nginx is returning 5xx errors on requests because it ran out of file descriptors (Too many open files) due to a restrictive configuration change.",
+     "affected_service": "nginx",
+     "root_cause": {
+      "category": "config_error",
+      "culprit": "chg-3850",
+      "explanation": "Commit chg-3850 removed the `worker_rlimit_nofile 65535` directive and lowered `worker_connections` to 4096. This caused Nginx to quickly exhaust its file descriptor limit (Too many open files errors: socket() failed and accept4() failed), resulting in widespread 5xx errors and a 22% error rate."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "nginx",
+       "ref": "2026-09-14T10:29:56Z ERROR [alert] 2817#2817: *9140348 socket() failed (24: Too many open files) while connecting to upstream",
+       "observation": "2026-09-14T10:29:56Z ERROR [alert] 2817#2817: *9140348 socket() failed (24: Too many open files) while connecting to upstream"
+      },
+      {
+       "kind": "log",
+       "service": "nginx",
+       "ref": "2026-09-14T10:29:57Z ERROR [crit] 2817#2817: accept4() failed (24: Too many open files)",
+       "observation": "2026-09-14T10:29:57Z ERROR [crit] 2817#2817: accept4() failed (24: Too many open files)"
+      },
+      {
+       "kind": "change",
+       "service": "nginx",
+       "ref": "chg-3850",
+       "observation": "chg-3850 lowered worker_connections to 4096 and removed worker_rlimit_nofile 65535"
+      },
+      {
+       "kind": "metric",
+       "service": "nginx",
+       "ref": "http_error_ratio",
+       "observation": "http_error_ratio{service=nginx} jumped from ~0.002 to ~0.22 right around the time of chg-3850"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert chg-3850 which removed worker_rlimit_nofile and reduced worker_connections in nginx.conf, causing file descriptor exhaustion (Too many open files error) and high 5xx error rates.",
+      "commands": [
+       "git revert chg-3850",
+       "kubectl rollout restart deployment/nginx"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git cherry-pick chg-3850",
+       "kubectl rollout restart deployment/nginx"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s21-feature-flag",
+   "alert": "HighErrorRate",
+   "service": "api",
+   "label": {
+    "category": "code_regression",
+    "culprits": [
+     "chg-6568"
+    ]
+   },
+   "rules_alert": {
+    "category": "code_regression",
+    "culprit": "chg-6568",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 5.3
+   },
+   "rules_logs": {
+    "category": "code_regression",
+    "culprit": "chg-6568",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 44.77
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 5,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "get_change"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 8827,
+    "completion_tokens": 574,
+    "time_to_report_s": 6.72,
+    "model_latency_s": 6.7,
+    "tool_time_s": 0.015,
+    "category": "code_regression",
+    "culprit": "chg-6568",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 2,
+    "evidence_supporting": 2,
+    "report": {
+     "what_broke": "Checkout requests fail with 5xx errors due to a TypeError when mixing Decimal and float values under the new checkout feature flag.",
+     "affected_service": "api",
+     "root_cause": {
+      "category": "code_regression",
+      "culprit": "chg-6568",
+      "explanation": "Change chg-6568 rolled out the new_checkout feature flag to 100% of users. This exposed a bug in checkout/pricing.py where code attempts to add a float and a decimal.Decimal, raising a TypeError and resulting in 5xx errors for checkout requests."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "change",
+       "service": "api",
+       "ref": "chg-6568",
+       "observation": "chg-6568 enabled new_checkout to 100% of users at 10:12 UTC, coinciding with the start of errors at 10:18 UTC"
+      },
+      {
+       "kind": "log",
+       "service": "api",
+       "ref": "2026-09-14T10:29:57Z ERROR TypeError: unsupported operand type(s) for +: 'decimal.Decimal' and 'float' (checkout/pricing.py:88, flag new_checkout)",
+       "observation": "TypeError: unsupported operand type(s) for +: 'decimal.Decimal' and 'float' (checkout/pricing.py:88, flag new_checkout)"
+      },
+      {
+       "kind": "metric",
+       "service": "api",
+       "ref": "HighErrorRate",
+       "observation": "High 5xx error rate on api service over the last 5 minutes"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Revert feature flag rollout chg-6568 (new_checkout to 100%) to mitigate the TypeError caused by mixing Decimal and float during checkout pricing calculation.",
+      "commands": [
+       "git revert chg-6568",
+       "kubectl rollout restart deployment/api"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git cherry-pick chg-6568",
+       "kubectl rollout restart deployment/api"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s22-dependency-bump",
+   "alert": "JobFailureRateHigh",
+   "service": "worker",
+   "label": {
+    "category": "code_regression",
+    "culprits": [
+     "chg-7083"
+    ]
+   },
+   "rules_alert": {
+    "category": "code_regression",
+    "culprit": "chg-7083",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 4.91
+   },
+   "rules_logs": {
+    "category": "code_regression",
+    "culprit": "chg-7083",
+    "category_ok": true,
+    "culprit_ok": true,
+    "ms": 40.52
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 7,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "list_metrics",
+     "get_change",
+     "query_metric"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 9250,
+    "completion_tokens": 632,
+    "time_to_report_s": 6.69,
+    "model_latency_s": 6.64,
+    "tool_time_s": 0.046,
+    "category": "code_regression",
+    "culprit": "chg-7083",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "Worker background jobs are failing due to an AttributeError when using the newly upgraded orjson library.",
+     "affected_service": "worker",
+     "root_cause": {
+      "category": "code_regression",
+      "culprit": "chg-7083",
+      "explanation": "Commit chg-7083 upgraded orjson from 3.10.7 to 4.0.0 in requirements.txt. orjson 4.0.0 removed or renamed OPT_NAIVE_UTC, causing worker jobs that serialize timestamps using this flag to raise AttributeError and fail."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "2026-09-14T10:29:50Z ERROR job export_orders:54835 failed: AttributeError: module 'orjson' has no attribute 'OPT_NAIVE_UTC'",
+       "observation": "job export_orders:54835 failed: AttributeError: module 'orjson' has no attribute 'OPT_NAIVE_UTC'"
+      },
+      {
+       "kind": "change",
+       "service": "worker",
+       "ref": "chg-7083",
+       "observation": "worker v3.9.1: bump orjson 3.10.7 -> 4.0.0"
+      },
+      {
+       "kind": "metric",
+       "service": "worker",
+       "ref": "jobs_failed_ratio",
+       "observation": "jobs_failed_ratio spiked from ~0.003 to ~0.35 immediately following chg-7083 at 09:40 UTC"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Downgrade orjson from 4.0.0 back to 3.10.7 to restore compatibility with OPT_NAIVE_UTC.",
+      "commands": [
+       "sed -i 's/orjson==4.0.0/orjson==3.10.7/g' requirements.txt",
+       "git commit -am \"Revert orjson bump to 3.10.7\""
+      ],
+      "config_diff": "",
+      "rollback": [
+       "git revert HEAD"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s23-queue-concurrency-typo",
+   "alert": "QueueBacklogHigh",
+   "service": "worker",
+   "label": {
+    "category": "config_error",
+    "culprits": [
+     "chg-1031"
+    ]
+   },
+   "rules_alert": {
+    "category": "resource_limits",
+    "culprit": "chg-1031",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 4.46
+   },
+   "rules_logs": {
+    "category": "resource_limits",
+    "culprit": "chg-1031",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 30.8
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 3,
+    "cache_hits": 3,
+    "tool_calls": 9,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "list_metrics",
+     "get_change",
+     "query_metric",
+     "query_metric",
+     "query_logs"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 9990,
+    "completion_tokens": 669,
+    "time_to_report_s": 7.41,
+    "model_latency_s": 7.36,
+    "tool_time_s": 0.046,
+    "category": "config_error",
+    "culprit": "chg-1031",
+    "confidence": 1.0,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 2,
+    "report": {
+     "what_broke": "The background worker queue backlog grew rapidly and breached critical thresholds because concurrency was incorrectly restricted to 1.",
+     "affected_service": "worker",
+     "root_cause": {
+      "category": "config_error",
+      "culprit": "chg-1031",
+      "explanation": "Change chg-1031 reduced worker concurrency and prefetch from 16 and 4 down to 1 and 1. This drastically crippled the background worker's throughput, causing jobs to queue up faster than they could be processed and leading to a massive queue backlog."
+     },
+     "confidence": 1.0,
+     "evidence": [
+      {
+       "kind": "change",
+       "service": "worker",
+       "ref": "chg-1031",
+       "observation": "chg-1031 changed worker concurrency and prefetch from 16/4 to 1/1"
+      },
+      {
+       "kind": "metric",
+       "service": "worker",
+       "ref": "queue_depth",
+       "observation": "queue_depth rose continuously from ~16 to over 4,750 right after chg-1031 was applied at 08:50 UTC"
+      },
+      {
+       "kind": "log",
+       "service": "worker",
+       "ref": "2026-09-14T10:29:34Z INFO  job export_orders:61035 done in 3.2s",
+       "observation": "Worker logs show single-threaded processing (e.g. only one job type at a time per log timestamps) unable to keep up with incoming job rate"
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Restore worker concurrency and prefetch settings to their previous values (concurrency=16, prefetch=4)",
+      "commands": [
+       "kubectl set env deployment/worker WORKER_CONCURRENCY=16 WORKER_PREFETCH=4 -n shop"
+      ],
+      "config_diff": "",
+      "rollback": [
+       "kubectl set env deployment/worker WORKER_CONCURRENCY=1 WORKER_PREFETCH=1 -n shop"
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  },
+  {
+   "id": "s24-postgres-wal-slot",
+   "alert": "DiskSpaceLow",
+   "service": "postgres",
+   "label": {
+    "category": "wal_retention",
+    "culprits": [
+     "chg-5126"
+    ]
+   },
+   "rules_alert": {
+    "category": "log_volume",
+    "culprit": "chg-5126",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 4.77
+   },
+   "rules_logs": {
+    "category": "log_volume",
+    "culprit": "chg-5126",
+    "category_ok": false,
+    "culprit_ok": true,
+    "ms": 35.18
+   },
+   "agent": {
+    "status": "ok",
+    "model": "gemini-flash-lite-latest",
+    "model_calls": 4,
+    "cache_hits": 4,
+    "tool_calls": 9,
+    "tools_used": [
+     "check_health",
+     "list_changes",
+     "list_cron_runs",
+     "query_logs",
+     "list_metrics",
+     "get_change",
+     "query_logs",
+     "query_metric",
+     "query_metric"
+    ],
+    "write_attempts": 0,
+    "invalid_reports": 0,
+    "prompt_tokens": 13340,
+    "completion_tokens": 637,
+    "time_to_report_s": 8.61,
+    "model_latency_s": 8.56,
+    "tool_time_s": 0.045,
+    "category": "wal_retention",
+    "culprit": "chg-5126",
+    "confidence": 0.99,
+    "category_ok": true,
+    "culprit_ok": true,
+    "evidence_total": 3,
+    "evidence_grounded": 3,
+    "evidence_supporting": 3,
+    "report": {
+     "what_broke": "PostgreSQL disk space reached 91% full due to unconsumed WAL files retained by an inactive logical replication slot.",
+     "affected_service": "postgres",
+     "root_cause": {
+      "category": "wal_retention",
+      "culprit": "chg-5126",
+      "explanation": "An unused logical replication slot (analytics_cdc) was created via change chg-5126 without an active consumer. PostgreSQL retains WAL for logical replication slots until they consume changes, causing continuous WAL accumulation and filling up the disk."
+     },
+     "confidence": 0.99,
+     "evidence": [
+      {
+       "kind": "change",
+       "service": "postgres",
+       "ref": "chg-5126",
+       "observation": "Logical replication slot analytics_cdc created but never consumed, retaining WAL files and consuming disk space."
+      },
+      {
+       "kind": "log",
+       "service": "postgres",
+       "ref": "pg_exporter: replication slot analytics_cdc active=false retained_wal=35.0GB",
+       "observation": "pg_exporter reported replication slot analytics_cdc active=false with retained_wal=35.0GB."
+      },
+      {
+       "kind": "metric",
+       "service": "postgres",
+       "ref": "node_filesystem_used_ratio",
+       "observation": "node_filesystem_used_ratio reached 90.85% due to unbounded WAL growth."
+      }
+     ],
+     "proposed_fix": {
+      "summary": "Drop the unused logical replication slot analytics_cdc to allow PostgreSQL to recycle WAL files and free up disk space.",
+      "commands": [
+       "psql -c \"SELECT pg_drop_replication_slot('analytics_cdc');\""
+      ],
+      "config_diff": "",
+      "rollback": [
+       "psql -c \"SELECT pg_create_logical_replication_slot('analytics_cdc', 'pgoutput');\""
+      ],
+      "risk": "low"
+     },
+     "requires_approval": true
+    }
+   }
+  }
+ ]
+}

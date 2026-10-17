@@ -1,0 +1,52 @@
+{
+ "request_sha256": "ab5cae780bcc88245698dc8c8e80579478865aa944c5c4f6ca165d474674bad6",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TkeqGtvZJsZxZvXFixOobxJzSb6f+BaAMAN9rgRAa70CQYnTJrLOWyiN5Qpd+iZ4vRqjkPawf0LyVscSeHubF8oI3OOTUCYFhnM/86h7dUeubkJCFVE2zTQ4="
+     }
+    },
+    "function": {
+     "arguments": "{\"change_id\":\"chg-1031\"}",
+     "name": "get_change"
+    },
+    "id": "call_2959932",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"name\":\"queue_depth\",\"since_minutes\":120,\"step_minutes\":5,\"service\":\"worker\"}",
+     "name": "query_metric"
+    },
+    "id": "call_2959933",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_minutes\":120,\"service\":\"worker\",\"step_minutes\":5,\"name\":\"container_cpu_usage_cores\"}",
+     "name": "query_metric"
+    },
+    "id": "call_2959934",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"level\":\"ERROR,WARN\",\"since_minutes\":120,\"service\":\"worker\"}",
+     "name": "query_logs"
+    },
+    "id": "call_2959935",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3379,
+  "completion_tokens": 136
+ },
+ "latency_s": 2.109,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

@@ -1,0 +1,36 @@
+{
+ "request_sha256": "33f7aae5de429992fabd2038949d733a5aadc55c3ef7a76eb1f3b6151cb45e78",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TS7Wmk2El5gE5xVXBi8Dn+H6KXCG/qcU5ERjWnSpzFARLUAYuyeE/b+Svh3q4lqUKzKT2KB8Ob8OCKdjWJARNhfGlKk+ujJiZ4J0Uoks8FOuU6shOfmhm3VM="
+     }
+    },
+    "function": {
+     "arguments": "{\"name\":\"pg_slow_queries_per_minute\",\"since_minutes\":60,\"service\":\"postgres\",\"step_minutes\":5}",
+     "name": "query_metric"
+    },
+    "id": "call_4023892",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_minutes\":60,\"service\":\"postgres\",\"step_minutes\":5,\"name\":\"node_cpu_iowait_ratio\"}",
+     "name": "query_metric"
+    },
+    "id": "call_4023893",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 5097,
+  "completion_tokens": 86
+ },
+ "latency_s": 3.031,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

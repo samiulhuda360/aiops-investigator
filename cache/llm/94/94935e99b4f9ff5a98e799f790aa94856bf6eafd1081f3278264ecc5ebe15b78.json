@@ -1,0 +1,28 @@
+{
+ "request_sha256": "94935e99b4f9ff5a98e799f790aa94856bf6eafd1081f3278264ecc5ebe15b78",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TfmmYd5ekczF91MUl/gmI1A0Ql9yfnxGP+yEIv5dBB+QjRNQxNAEEglCXBHrW5yGWXCyRGQyvJYpY2nr4UqwXtA2L4lUsgTyCJ1G+2K4sKXZza23SvFsvnPE="
+     }
+    },
+    "function": {
+     "arguments": "{\"name\":\"QueueBacklogHigh\"}",
+     "name": "read_runbook"
+    },
+    "id": "call_3103001",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3910,
+  "completion_tokens": 20
+ },
+ "latency_s": 1.922,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

@@ -1,0 +1,36 @@
+{
+ "request_sha256": "221824a1fa032a9122d152207df1d5c7bfb113a65372dee3e496a66b71c1c74c",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TvVeaWUTUmhMpG7JPaushHpoVxA0/3awIclfgBtk6EtCLT77d2WblJoAgONeFPcuXoZjbMg4ydy1cHmBZiOLGvsOCl9a7Q3NT2MR9Mt/FwSBED7UmYqMlguQ="
+     }
+    },
+    "function": {
+     "arguments": "{\"step_minutes\":5,\"service\":\"postgres\",\"since_minutes\":60,\"name\":\"container_cpu_usage_cores\"}",
+     "name": "query_metric"
+    },
+    "id": "call_2859016",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_minutes\":60,\"service\":\"api\",\"name\":\"container_cpu_usage_cores\",\"step_minutes\":5}",
+     "name": "query_metric"
+    },
+    "id": "call_2859017",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 4729,
+  "completion_tokens": 82
+ },
+ "latency_s": 2.125,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

@@ -1,0 +1,28 @@
+{
+ "request_sha256": "7c300e24b28e76fa5abe594ce5578d1300129df43962cb010d676c902b8a2a96",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TkuNTN95OJrdVYRFvHspxXx91F+SyNiVqKhV+jJGsRy+0N/tlGofMvLqfRx9vvElcGYpg6pEyqCBtiVmlUl6nDhqDiVg9vJxjhrx55l9vWpF94IyF8kszfdw="
+     }
+    },
+    "function": {
+     "arguments": "{\"since_hours\":12}",
+     "name": "list_cron_runs"
+    },
+    "id": "call_3100189",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 4026,
+  "completion_tokens": 19
+ },
+ "latency_s": 1.687,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

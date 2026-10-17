@@ -1,0 +1,36 @@
+{
+ "request_sha256": "0ffd245f89282fb6763dd6a2878cd46ec3e7ac9f6287a128d8ae6bff2810df30",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TbJCM8Sl3tWG18kGuOY3TE5qw7s1HQOW3V8LVrbXCyFMiIy813kEk+BIZVv6vJT91b3X1WHH952KgYGOCGI/gxzx9E1v1iMM41hn/zMMQdBPN2cMHrrV8pYY="
+     }
+    },
+    "function": {
+     "arguments": "{\"change_id\":\"chg-7083\"}",
+     "name": "get_change"
+    },
+    "id": "call_2175183",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"worker\",\"since_minutes\":60,\"step_minutes\":5,\"name\":\"jobs_failed_ratio\"}",
+     "name": "query_metric"
+    },
+    "id": "call_2175184",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3312,
+  "completion_tokens": 63
+ },
+ "latency_s": 1.75,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

@@ -1,0 +1,60 @@
+{
+ "request_sha256": "3b19dc07984eb0a45764f0b69946c31fd44c70acd71c07145bb24e4bf2390883",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0T/WbUc+F1I+0Ys/qKWJDNOEeSWqpBfmrpd4qGIy3VSCE3yf8rLyDJUlC9OD7pAg17VoxBYC3/jgvPDagX77qiQBJKdwDI0xFXNNcjA5r3Y55JKRfAR4rym6s="
+     }
+    },
+    "function": {
+     "arguments": "{}",
+     "name": "check_health"
+    },
+    "id": "call_2169950",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":24}",
+     "name": "list_changes"
+    },
+    "id": "call_2169951",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":24}",
+     "name": "list_cron_runs"
+    },
+    "id": "call_2169952",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"nginx\"}",
+     "name": "list_metrics"
+    },
+    "id": "call_2169953",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"api\"}",
+     "name": "list_metrics"
+    },
+    "id": "call_2169954",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2249,
+  "completion_tokens": 78
+ },
+ "latency_s": 2.203,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

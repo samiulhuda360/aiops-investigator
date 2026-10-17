@@ -1,0 +1,52 @@
+{
+ "request_sha256": "19eaeca06e34ec0ab109d1c212d224cfd64d4edaf4010fade8328a883ff1630a",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TbP7A3FNsCZyr6iV0FitQY08UC4h76fEYokVmbd0lCra+DUSIrs5hjyTAf9Vb2kFvl1s00e/byU1h8ssbp3KJdrDgixzHw/YsnN2N0IFdRS7dh+pOMz2e5oo="
+     }
+    },
+    "function": {
+     "arguments": "{\"since_hours\":24}",
+     "name": "list_cron_runs"
+    },
+    "id": "call_3527180",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":24}",
+     "name": "list_changes"
+    },
+    "id": "call_3527181",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"level\":\"ERROR,WARN\",\"since_minutes\":60,\"service\":\"worker\"}",
+     "name": "query_logs"
+    },
+    "id": "call_3527182",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{}",
+     "name": "check_health"
+    },
+    "id": "call_3527183",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2241,
+  "completion_tokens": 77
+ },
+ "latency_s": 2.0,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

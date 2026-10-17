@@ -1,0 +1,52 @@
+{
+ "request_sha256": "1dfe8dbdffdeb4e2e6600858bf6885481f6303ba208cf056150a864a8912f0af",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TxitOx4V/SgAS2Ds/SMrIeAFndIS41RqMTeWUN9F0YXRAoWJbaSNsO1WaJz2KJami7LJrhXd55EfoRqv1OhDJUVCgstozcI2SwPUb8T8fwaHIqNV1VZptQ60="
+     }
+    },
+    "function": {
+     "arguments": "{}",
+     "name": "check_health"
+    },
+    "id": "call_1150337",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":24}",
+     "name": "list_changes"
+    },
+    "id": "call_1150338",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"nginx\"}",
+     "name": "list_metrics"
+    },
+    "id": "call_1150339",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"api\"}",
+     "name": "list_metrics"
+    },
+    "id": "call_1150340",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2247,
+  "completion_tokens": 59
+ },
+ "latency_s": 1.875,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

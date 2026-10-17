@@ -1,0 +1,52 @@
+{
+ "request_sha256": "13b8866a18eace8907e5ae43d7895b2151c06772cb239e00b7284358bbafe687",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0T8wNoER+Cn7Ja/JkvmknoGxkdpdrUOuLImu0LE+At7AAhSKVBAr8oFij487O3dOL0jubPLwekfJBLudEogLmJupb8XZokstvOJscHSu6RKbP5XZ8qEBqPNvc="
+     }
+    },
+    "function": {
+     "arguments": "{\"change_id\":\"chg-9155\"}",
+     "name": "get_change"
+    },
+    "id": "call_2770595",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"worker\",\"since_minutes\":120,\"step_minutes\":5,\"name\":\"queue_depth\"}",
+     "name": "query_metric"
+    },
+    "id": "call_2770596",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"api\",\"since_minutes\":60,\"level\":\"ERROR\"}",
+     "name": "query_logs"
+    },
+    "id": "call_2770597",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"name\":\"CredentialsMismatch\"}",
+     "name": "read_runbook"
+    },
+    "id": "call_2770598",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3303,
+  "completion_tokens": 109
+ },
+ "latency_s": 2.593,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

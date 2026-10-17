@@ -1,0 +1,92 @@
+{
+ "request_sha256": "3aeae449213c74fcdc9488a94eb53cd9c2d83b300a19801286950a59f8838d49",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TTjjYUQ5JqRCQVVeIAyLqePmxz5p4fdN5PaV1dn5QGo5WEf616QlnG9vPnU0JhcQOsUV/LDwLBSyHN2tiBAkL/oGYrrW+3BLzOVrVOSmi6Qv7Oek5C197ilg="
+     }
+    },
+    "function": {
+     "arguments": "{\"service\":\"api\"}",
+     "name": "check_health"
+    },
+    "id": "call_934088",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"nginx\"}",
+     "name": "check_health"
+    },
+    "id": "call_934089",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"postgres\"}",
+     "name": "check_health"
+    },
+    "id": "call_934090",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"worker\"}",
+     "name": "check_health"
+    },
+    "id": "call_934091",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"api\"}",
+     "name": "list_metrics"
+    },
+    "id": "call_934092",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":24}",
+     "name": "list_changes"
+    },
+    "id": "call_934093",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":24}",
+     "name": "list_cron_runs"
+    },
+    "id": "call_934094",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"api\",\"level\":\"ERROR,WARN\",\"since_minutes\":60}",
+     "name": "query_logs"
+    },
+    "id": "call_934095",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"name\":\"http_request_duration_seconds\",\"since_minutes\":60,\"service\":\"api\",\"step_minutes\":5}",
+     "name": "query_metric"
+    },
+    "id": "call_934096",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2247,
+  "completion_tokens": 188
+ },
+ "latency_s": 2.375,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

@@ -1,0 +1,52 @@
+{
+ "request_sha256": "7620a1550cf76ad7ed023849d0c4487a1cb804078dd62a43bf3609137f197054",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0T+6Djqc9ZWcro73jBgzmymmfGj8Q6QC1sNOpBnteI4NW8/uQgRdm8BG5cWj2cS9N2Rj9+6Mxr1QS284huAbTUlQZRTgYEm0tmjSLTPp9il3sev1qDfWae9KQ="
+     }
+    },
+    "function": {
+     "arguments": "{}",
+     "name": "check_health"
+    },
+    "id": "call_380523",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":24}",
+     "name": "list_changes"
+    },
+    "id": "call_380524",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"level\":\"ERROR,WARN\",\"limit\":10,\"since_minutes\":60,\"service\":\"api\"}",
+     "name": "query_logs"
+    },
+    "id": "call_380525",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"postgres\",\"limit\":10,\"since_minutes\":60,\"level\":\"ERROR,WARN\"}",
+     "name": "query_logs"
+    },
+    "id": "call_380526",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2247,
+  "completion_tokens": 99
+ },
+ "latency_s": 2.578,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

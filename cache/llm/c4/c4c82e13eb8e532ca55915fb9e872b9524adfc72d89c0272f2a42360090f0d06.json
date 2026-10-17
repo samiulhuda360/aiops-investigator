@@ -1,0 +1,28 @@
+{
+ "request_sha256": "c4c82e13eb8e532ca55915fb9e872b9524adfc72d89c0272f2a42360090f0d06",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0T2SqkQnAuqYMJ9LLoJy6WkCrQvm+OLs+ETcXRWKJy1A8ZYczbjtUTJks8OD385ivJS/6vuWn+Vxo3sKbw9Xn7mc6E2/WtxoMM0XB/RRjmGp9nSQhCUextne8="
+     }
+    },
+    "function": {
+     "arguments": "{\"what_broke\":\"p95 latency on the API spiked due to database connection pool exhaustion caused by long-held connections during monthly report exports.\",\"root_cause\":{\"category\":\"connection_pool_exhausted\",\"explanation\":\"Change chg-4529 wrapped the report export generator in session.begin() and streamed rows while holding the transaction open. This holds a database connection from the pool for the entire duration of the client download (which can take thousands of seconds), eventually exhausting the connection pool limit of 20 and causing all subsequent API requests to time out waiting for a connection.\",\"culprit\":\"chg-4529\"},\"affected_service\":\"api\",\"confidence\":1,\"evidence\":[{\"observation\":\"sqlalchemy.exc.TimeoutError: QueuePool limit of size 20 overflow 0 reached, connection timed out, timeout 30.00\",\"ref\":\"2026-09-14T10:29:52Z ERROR sqlalchemy.exc.TimeoutError: QueuePool limit of size 20 overflow 0 reached, connection timed out, timeout 30.00\",\"kind\":\"log\",\"service\":\"api\"},{\"ref\":\"2026-09-14T10:26:48Z WARN  slow request GET /api/reports/export?month=2026-08 took 3299.2s request_id=7f55df21\",\"service\":\"api\",\"observation\":\"slow request GET /api/reports/export?month=2026-08 took 3299.2s\",\"kind\":\"log\"},{\"ref\":\"chg-4529\",\"kind\":\"change\",\"observation\":\"chg-4529 added session.begin() around export_monthly streaming, holding database connection open during slow client downloads\",\"service\":\"api\"},{\"service\":\"api\",\"ref\":\"db_pool_connections_in_use\",\"observation\":\"db_pool_connections_in_use reached max of 20 and stayed pinned there since right after chg-4529 deploy\",\"kind\":\"metric\"}],\"proposed_fix\":{\"summary\":\"Revert chg-4529 which holds the database connection open during client download in export_monthly, exhausting the connection pool.\",\"rollback\":[\"git cherry-pick chg-4529\"],\"risk\":\"low\",\"commands\":[\"git revert chg-4529\",\"kubectl rollout restart deployment/api\"]}}",
+     "name": "submit_report"
+    },
+    "id": "call_2706781",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 4770,
+  "completion_tokens": 580
+ },
+ "latency_s": 2.953,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

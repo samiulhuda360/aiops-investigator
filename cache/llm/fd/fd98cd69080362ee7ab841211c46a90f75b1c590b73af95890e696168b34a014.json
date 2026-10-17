@@ -1,0 +1,52 @@
+{
+ "request_sha256": "fd98cd69080362ee7ab841211c46a90f75b1c590b73af95890e696168b34a014",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TSl5p7aMrXguMwVX110Ev8IM2Aqtn5FpVXHMXD11pAcVFQ9G7kIDIpj8251Y6ZDyvlXW/sHCRVewSHjqdz+I0Bz03H3cp7xHk+A5f21kMUF31l0sM9ToxBPA="
+     }
+    },
+    "function": {
+     "arguments": "{\"change_id\":\"chg-3125\"}",
+     "name": "get_change"
+    },
+    "id": "call_3188502",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"step_minutes\":5,\"name\":\"container_cpu_throttled_ratio\",\"service\":\"api\",\"since_minutes\":120}",
+     "name": "query_metric"
+    },
+    "id": "call_3188503",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"name\":\"http_request_duration_p95_seconds\",\"service\":\"api\",\"since_minutes\":120,\"step_minutes\":5}",
+     "name": "query_metric"
+    },
+    "id": "call_3188504",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_minutes\":120,\"service\":\"api\",\"step_minutes\":5,\"name\":\"container_cpu_usage_cores\"}",
+     "name": "query_metric"
+    },
+    "id": "call_3188505",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3407,
+  "completion_tokens": 156
+ },
+ "latency_s": 2.094,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

@@ -1,0 +1,28 @@
+{
+ "request_sha256": "3001545d05d09b8b6f3d45846171cfc7b379ca852bb440e59ac59b13cc246b0c",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TJOnYjv9qLU9NIoSIMuC/QSMX0qhKjFfayPXIxsCeKS+f5vQ4tKeCU0sNCofmDkbX2TJijhJRA1IBR6hd1UZVgSt7aSjLpOzajb/4SIWY1wx5Gvex+K6ov5s="
+     }
+    },
+    "function": {
+     "arguments": "{\"confidence\":1,\"what_broke\":\"The API service experienced a memory leak causing high memory usage and near container limit exhaustion due to an unbounded list growing PDF renderer objects.\",\"proposed_fix\":{\"rollback\":[\"git cherry-pick chg-6781\"],\"summary\":\"Revert chg-6781 to stop appending PDF renderers to the unbounded global list, fixing the memory leak.\",\"risk\":\"low\",\"commands\":[\"git revert chg-6781\"]},\"root_cause\":{\"explanation\":\"Change chg-6781 introduced a memory leak by globally appending every created Renderer instance to an unbounded list (_renderers.append(r)) for invoice PDFs instead of properly reusing a fixed pool, causing resident memory to grow continuously until hitting the container memory limit.\",\"culprit\":\"chg-6781\",\"category\":\"memory_leak\"},\"affected_service\":\"api\",\"evidence\":[{\"observation\":\"process_resident_memory_bytes grew steadily from ~780Mi to ~969Mi over 2 hours\",\"ref\":\"process_resident_memory_bytes\",\"kind\":\"metric\",\"service\":\"api\"},{\"kind\":\"log\",\"service\":\"api\",\"ref\":\"2026-09-14T10:20:00Z WARN  pdf renderer pool holds 423 renderers (expected \\u003c= 8)\",\"observation\":\"pdf renderer pool holds 423 renderers (expected \\u003c= 8)\"},{\"observation\":\"chg-6781 introduced an un-bounded list appending Renderer instances (_renderers.append(r)) without ever cleaning them up or limiting the pool size.\",\"ref\":\"chg-6781\",\"kind\":\"change\"}]}",
+     "name": "submit_report"
+    },
+    "id": "call_3683092",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3998,
+  "completion_tokens": 403
+ },
+ "latency_s": 2.766,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

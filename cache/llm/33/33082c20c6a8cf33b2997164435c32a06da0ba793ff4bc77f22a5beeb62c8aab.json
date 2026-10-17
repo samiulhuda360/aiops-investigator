@@ -1,0 +1,60 @@
+{
+ "request_sha256": "33082c20c6a8cf33b2997164435c32a06da0ba793ff4bc77f22a5beeb62c8aab",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TqyzrpUALDSfiBOpEBJbMGqsQO9KD9wWFvuu4YJ2xx97sXF+i4eIY4d+GJe7Zw4XiVUy3bR6jAbCYavAIWUDXU99yKsHFgNoKwIeZaz2E9WH6WFMcxuCPgl8="
+     }
+    },
+    "function": {
+     "arguments": "{\"change_id\":\"chg-4529\"}",
+     "name": "get_change"
+    },
+    "id": "call_2911097",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"api\",\"step_minutes\":5,\"name\":\"db_pool_connections_in_use\",\"since_minutes\":120}",
+     "name": "query_metric"
+    },
+    "id": "call_2911098",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"postgres\",\"since_minutes\":120,\"name\":\"pg_slow_queries_per_minute\",\"step_minutes\":5}",
+     "name": "query_metric"
+    },
+    "id": "call_2911099",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_minutes\":60,\"level\":\"ERROR\",\"service\":\"postgres\",\"limit\":10}",
+     "name": "query_logs"
+    },
+    "id": "call_2911100",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"name\":\"HighLatency\"}",
+     "name": "read_runbook"
+    },
+    "id": "call_2911101",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3600,
+  "completion_tokens": 164
+ },
+ "latency_s": 2.047,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

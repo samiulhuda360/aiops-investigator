@@ -1,0 +1,52 @@
+{
+ "request_sha256": "08d6f0de2de5f8293c7ec07264e63a438f61ada620b708ec3d6cd616b8041c5f",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0T0Hio6Mvj0jt43o9OwmBpdw66td7vBIYf8twmRB3jmGLCsQPaSOWyw1+KovN2Xzxcm86/pJx0YVVgPUgbnMYLtuQSY2E2/N2dmWFLGCjDYP5WZhv/JD9TU8w="
+     }
+    },
+    "function": {
+     "arguments": "{}",
+     "name": "check_health"
+    },
+    "id": "call_3645512",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":72}",
+     "name": "list_changes"
+    },
+    "id": "call_3645513",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":24}",
+     "name": "list_cron_runs"
+    },
+    "id": "call_3645514",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"nginx\",\"level\":\"WARN,ERROR\",\"since_minutes\":60}",
+     "name": "query_logs"
+    },
+    "id": "call_3645515",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2245,
+  "completion_tokens": 77
+ },
+ "latency_s": 1.875,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

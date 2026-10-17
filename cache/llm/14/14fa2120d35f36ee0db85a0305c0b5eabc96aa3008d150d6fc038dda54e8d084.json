@@ -1,0 +1,52 @@
+{
+ "request_sha256": "14fa2120d35f36ee0db85a0305c0b5eabc96aa3008d150d6fc038dda54e8d084",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TiotMQP7L0zo79RT+OklhEduKM3jDOAIeG28VRSBI1PqRb0J0mOViYIbUAOKUEYL7xHwbwo5ixmxpDBpkoOsc24z1vg+3k6F/QtP795Gdz42RQTMEUNI+K6s="
+     }
+    },
+    "function": {
+     "arguments": "{\"service\":\"nginx\",\"name\":\"process_open_fds\",\"step_minutes\":5,\"since_minutes\":60}",
+     "name": "query_metric"
+    },
+    "id": "call_2712877",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"api\",\"step_minutes\":5,\"since_minutes\":60,\"name\":\"process_open_fds\"}",
+     "name": "query_metric"
+    },
+    "id": "call_2712878",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"step_minutes\":5,\"since_minutes\":60,\"service\":\"nginx\",\"name\":\"http_error_ratio\"}",
+     "name": "query_metric"
+    },
+    "id": "call_2712879",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"change_id\":\"chg-3850\"}",
+     "name": "get_change"
+    },
+    "id": "call_2712880",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3580,
+  "completion_tokens": 141
+ },
+ "latency_s": 1.984,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

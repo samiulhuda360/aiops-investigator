@@ -1,0 +1,52 @@
+{
+ "request_sha256": "4eac51aac392a1fae0bfda0daccc3dd9ccf5a48ec6298b40d23545da0d85a07d",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TnFFbSgHMXr0+wrmJTOtAGohL+TSu76fgNcmj3Ch2ihl+9P8//xmZU6v5QPlZxSPU8ygnCHlMErhFtZYsigdLOrWfbliuJJcaTwOrfCtuOe2yxfdfLpxvVQY="
+     }
+    },
+    "function": {
+     "arguments": "{\"since_minutes\":60,\"service\":\"api\",\"name\":\"http_error_ratio\",\"step_minutes\":5}",
+     "name": "query_metric"
+    },
+    "id": "call_558445",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"level\":\"ERROR,WARN\",\"since_minutes\":30,\"limit\":20,\"service\":\"api\"}",
+     "name": "query_logs"
+    },
+    "id": "call_558446",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"change_id\":\"chg-1353\"}",
+     "name": "get_change"
+    },
+    "id": "call_558447",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"change_id\":\"chg-2694\"}",
+     "name": "get_change"
+    },
+    "id": "call_558448",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3158,
+  "completion_tokens": 123
+ },
+ "latency_s": 1.985,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

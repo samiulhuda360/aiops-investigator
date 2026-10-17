@@ -1,0 +1,44 @@
+{
+ "request_sha256": "4c71089edcec11ee6197bcf2092a38c1410376c089ebdb828cd69fa26cac73cf",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TNvhq0iKeeN+ZX9MKHvKH2PLi04EHlGPIqR3PTm0KwLZun8L4nAWBmuVFOmRooRa0Ct+T/stwk3jw9KA8RrrQq0sc6THILLyjO+RVKboE7uREd9I/gAvV45g="
+     }
+    },
+    "function": {
+     "arguments": "{\"name\":\"upstream_payments_p95_seconds\",\"step_minutes\":5,\"service\":\"api\",\"since_minutes\":60}",
+     "name": "query_metric"
+    },
+    "id": "call_3099501",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":2}",
+     "name": "list_cron_runs"
+    },
+    "id": "call_3099502",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_hours\":48}",
+     "name": "list_changes"
+    },
+    "id": "call_3099503",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 3417,
+  "completion_tokens": 78
+ },
+ "latency_s": 2.156,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

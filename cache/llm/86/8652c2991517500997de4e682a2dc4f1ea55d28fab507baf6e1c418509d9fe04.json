@@ -1,0 +1,52 @@
+{
+ "request_sha256": "8652c2991517500997de4e682a2dc4f1ea55d28fab507baf6e1c418509d9fe04",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0T2vObVxMNnRCUXh6eiWOQkJj21fc9UgQJ+W0iKg2L1bS67/+aZ7cHP1szFAwmKnnYEpbUxf8xBEPny1mMXrTKgxvAPomwNyvUVlkBZUx6OE4DnB6O+tz94x0="
+     }
+    },
+    "function": {
+     "arguments": "{\"change_id\":\"chg-6781\"}",
+     "name": "get_change"
+    },
+    "id": "call_765578",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_minutes\":120,\"step_minutes\":5,\"name\":\"process_resident_memory_bytes\",\"service\":\"api\"}",
+     "name": "query_metric"
+    },
+    "id": "call_765579",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"step_minutes\":5,\"service\":\"api\",\"name\":\"container_memory_limit_bytes\",\"since_minutes\":120}",
+     "name": "query_metric"
+    },
+    "id": "call_765580",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"name\":\"HighMemoryUsage\"}",
+     "name": "read_runbook"
+    },
+    "id": "call_765581",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2981,
+  "completion_tokens": 127
+ },
+ "latency_s": 2.203,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

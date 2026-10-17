@@ -1,0 +1,52 @@
+{
+ "request_sha256": "78a92c0894fa3ecdac23854b6a22fd93fd3607e3f9972f4ea821e93c773d87fb",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TFZIj2r0Dt5PDafgxuW5tmTi2o4UHipYVGFGXpMErBXTpGW2JSXOZFB0V9BH0k946WGSVKdlFZ9LQbdJPkA7meDMfn0rta00SFokMLPk57CIbXImH/a9R0es="
+     }
+    },
+    "function": {
+     "arguments": "{\"since_minutes\":60,\"level\":\"ERROR,WARN\",\"service\":\"api\"}",
+     "name": "query_logs"
+    },
+    "id": "call_2217420",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"level\":\"ERROR,WARN\",\"since_minutes\":60,\"service\":\"nginx\"}",
+     "name": "query_logs"
+    },
+    "id": "call_2217421",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"worker\",\"since_minutes\":60,\"level\":\"ERROR,WARN\"}",
+     "name": "query_logs"
+    },
+    "id": "call_2217422",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_minutes\":60,\"service\":\"postgres\",\"level\":\"ERROR,WARN\"}",
+     "name": "query_logs"
+    },
+    "id": "call_2217423",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2826,
+  "completion_tokens": 124
+ },
+ "latency_s": 2.078,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

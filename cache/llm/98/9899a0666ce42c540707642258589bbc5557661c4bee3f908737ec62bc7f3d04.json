@@ -1,0 +1,52 @@
+{
+ "request_sha256": "9899a0666ce42c540707642258589bbc5557661c4bee3f908737ec62bc7f3d04",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0Tu3evY+FIXGNB0K7TgikDCJQFBEmDK5ZpU70VLNM6fOOtXgBpXcnD+Ssb5LRH+lPA5+dWasgQvfWe1EM4+nWDcoj/I03qWDgscwOMLnUQOTgsQ80FL3GdWWw="
+     }
+    },
+    "function": {
+     "arguments": "{\"name\":\"http_error_ratio\",\"step_minutes\":5,\"service\":\"nginx\",\"since_minutes\":60}",
+     "name": "query_metric"
+    },
+    "id": "call_2221254",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"name\":\"ssl_certificate_expiry_days\",\"service\":\"nginx\",\"step_minutes\":5,\"since_minutes\":60}",
+     "name": "query_metric"
+    },
+    "id": "call_2221255",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"since_minutes\":30,\"level\":\"ERROR,WARN\",\"service\":\"nginx\",\"limit\":50}",
+     "name": "query_logs"
+    },
+    "id": "call_2221256",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"level\":\"ERROR,WARN\",\"limit\":50,\"service\":\"api\",\"since_minutes\":30}",
+     "name": "query_logs"
+    },
+    "id": "call_2221257",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2780,
+  "completion_tokens": 152
+ },
+ "latency_s": 2.219,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}

@@ -1,0 +1,44 @@
+{
+ "request_sha256": "c93a0f662a498c64260a326676668536c1877cdc16db3acd62ee6041909e1bff",
+ "message": {
+  "role": "assistant",
+  "tool_calls": [
+   {
+    "extra_content": {
+     "google": {
+      "thought_signature": "EmAKXgFpFH0TCTBtGZ0otJQ2yaMovO5tHL96LLRUfHXKpRfUw1MjnEGwEMREQDV7PUjfjTThOs4UtuDyH5hoBYsOQDryLSCq7ewNXgcHzZrzigpMqXTlzMeAIqT+NE8bC/U="
+     }
+    },
+    "function": {
+     "arguments": "{\"change_id\":\"chg-3051\"}",
+     "name": "get_change"
+    },
+    "id": "call_839960",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"service\":\"api\"}",
+     "name": "list_metrics"
+    },
+    "id": "call_839961",
+    "type": "function"
+   },
+   {
+    "function": {
+     "arguments": "{\"name\":\"HighLatency\"}",
+     "name": "read_runbook"
+    },
+    "id": "call_839962",
+    "type": "function"
+   }
+  ]
+ },
+ "usage": {
+  "prompt_tokens": 2960,
+  "completion_tokens": 58
+ },
+ "latency_s": 2.156,
+ "model": "gemini-flash-lite-latest",
+ "finish_reason": "tool_calls"
+}
