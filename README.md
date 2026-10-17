@@ -87,12 +87,12 @@ On 24 planted incidents, each with a known true cause (details in [Evaluation](#
 ```mermaid
 %%{init: {"theme": "base", "themeVariables": {"primaryColor": "#e6f2ef", "primaryBorderColor": "#2f6f68", "primaryTextColor": "#13302c", "lineColor": "#5f7471", "secondaryColor": "#f3efe6", "tertiaryColor": "#f7f8f6"}}}%%
 flowchart LR
-  subgraph ENV["Simulated environment (plain processes or Docker Compose)"]
+  subgraph ENV["Simulated environment (plain local processes)"]
     FI["Fault injector<br/>24 labelled incidents"] --> W[("Environment snapshot<br/>logs · metrics · changes · cron · health")]
     W --> S1["nginx / api / worker / postgres<br/>/health and /metrics"]
   end
-  S1 -. scrape .-> P["Prometheus"] --> AM["Alertmanager"]
-  AM -- webhook --> C["Console<br/>aiops/web.py"]
+  INJ["aiops inject --send"] -- Alertmanager webhook --> C["Console<br/>aiops/web.py"]
+  AM["Your Alertmanager"] -- webhook --> C
   CLI["aiops CLI"] --> A
   C --> A["Agent loop<br/>aiops/agent.py"]
   A <--> M["Gemini<br/>OpenAI-compatible API"]
@@ -294,7 +294,7 @@ cache. The demo, the tests and CI therefore run offline with no key, and the liv
 | Web console and webhook | FastAPI and Uvicorn, server-rendered HTML (no JavaScript build) |
 | Tracing | OpenTelemetry SDK; JSON-lines file, console, OTLP/HTTP to Jaeger |
 | Simulated services | Python standard-library HTTP servers exposing `/health` and Prometheus `/metrics` |
-| Alerting (optional) | Prometheus and Alertmanager rules and config in `deploy/` |
+| Alert input | Alertmanager-compatible webhook (version 4 payloads) |
 | Tests and CI | pytest, GitHub Actions (Python 3.11 and 3.12) |
 
 ## Setup
@@ -331,15 +331,27 @@ aiops env down                  # stops exactly the processes it started
 `aiops env list` shows all 24 incidents. `aiops investigate --scenario <id>` investigates one directly, and
 `--rules` uses the rules baseline instead of the model.
 
-### Docker Compose (optional)
+### Connect it to your own Prometheus
 
-`docker-compose.yml` runs the same four services and the console, plus a real Prometheus (scraping `/metrics`
-with the alert rules in `deploy/alert-rules.yml`), Alertmanager (posting to the console's webhook) and Jaeger:
+The console accepts Alertmanager's standard webhook format (version 4) at `POST /alertmanager`; the tests send it
+recorded payloads, including resolved alerts, which are ignored. Run the console where Alertmanager can reach it
+(`aiops serve --port 8080`) and add a receiver:
 
-```bash
-docker compose up -d --build
-docker compose exec console aiops inject s12-backup-cron-noisy
+```yaml
+route:
+  receiver: aiops-investigator
+  group_by: [alertname, service]
+
+receivers:
+  - name: aiops-investigator
+    webhook_configs:
+      - url: http://<console-host>:8080/alertmanager
+        send_resolved: false
 ```
+
+Each firing alert is investigated in the background and its report appears on the approval page. To investigate
+your own systems rather than the simulated shop, the read-only tools in `aiops/tools.py` are the part to point at
+your log store, metrics API and change history.
 
 ### Live model runs
 
@@ -389,7 +401,6 @@ aiops/
 runbooks/           one runbook per alert name, readable by the agent
 eval/               run_eval.py, results.json, RESULTS.md
 cache/llm/          recorded model replies for offline replay
-deploy/             Prometheus, alert rules, Alertmanager config
 examples/           MCP client example
 tests/              unit and integration tests
 docs/               screenshots and the demo GIF

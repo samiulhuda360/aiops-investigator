@@ -3,8 +3,7 @@
     python -m aiops.sim.service --name api --port 9102 --world var/active
 
 It serves the current state of the active environment, so whatever incident the fault injector planted shows up
-in the health check and in the latest metric values. A real Prometheus can scrape ``/metrics`` (see
-``deploy/prometheus.yml``) and fire alerts through Alertmanager into the console's webhook.
+in the health check and in the latest metric values. ``/metrics`` uses the Prometheus text exposition format.
 """
 
 from __future__ import annotations
