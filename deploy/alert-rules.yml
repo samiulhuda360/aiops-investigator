@@ -1,0 +1,57 @@
+groups:
+  - name: shop
+    rules:
+      - alert: HighErrorRate
+        expr: http_error_ratio > 0.05
+        for: 5m
+        labels: { severity: critical }
+        annotations:
+          summary: "High error rate on {{ $labels.service }}"
+          description: "5xx ratio on {{ $labels.service }} is {{ $value | humanizePercentage }} over the last 5 minutes."
+      - alert: HighLatency
+        expr: http_request_duration_p95_seconds > 2
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "High latency on {{ $labels.service }}"
+          description: "p95 latency on {{ $labels.service }} is {{ $value | humanize }}s."
+      - alert: DiskSpaceLow
+        expr: node_filesystem_used_ratio > 0.9
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "Disk space low on {{ $labels.service }}"
+          description: "Filesystem on {{ $labels.service }} is {{ $value | humanizePercentage }} full."
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / on(service) container_memory_limit_bytes > 0.9
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: "High memory usage on {{ $labels.service }}"
+          description: "{{ $labels.service }} memory is at {{ $value | humanizePercentage }} of its limit."
+      - alert: ContainerRestarting
+        expr: increase(kube_pod_container_restarts_total[1h]) > 0
+        labels: { severity: warning }
+        annotations:
+          summary: "Container restarting: {{ $labels.service }}"
+          description: "{{ $labels.service }} restarted in the last hour."
+      - alert: CertificateExpiringSoon
+        expr: ssl_certificate_expiry_days < 14
+        labels: { severity: warning }
+        annotations:
+          summary: "TLS certificate expiring"
+          description: "Certificate expires in {{ $value | humanize }} days."
+      - alert: QueueBacklogHigh
+        expr: queue_depth > 1000
+        for: 10m
+        labels: { severity: critical }
+        annotations:
+          summary: "Queue backlog high"
+          description: "Worker queue depth is {{ $value | humanize }}."
+      - alert: JobFailureRateHigh
+        expr: jobs_failed_ratio > 0.1
+        for: 10m
+        labels: { severity: critical }
+        annotations:
+          summary: "Job failure rate high on {{ $labels.service }}"
+          description: "{{ $value | humanizePercentage }} of worker jobs failed."

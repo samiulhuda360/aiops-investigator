@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.venv/
+# Generated at run time (environments, traces, approval state, process logs)
+var/

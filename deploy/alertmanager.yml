@@ -1,0 +1,11 @@
+route:
+  receiver: aiops-investigator
+  group_by: [alertname, service]
+  group_wait: 10s
+  repeat_interval: 4h
+
+receivers:
+  - name: aiops-investigator
+    webhook_configs:
+      - url: http://console:8080/alertmanager
+        send_resolved: false

@@ -1,0 +1,33 @@
+# The same environment as `aiops env up`, plus a real Prometheus, Alertmanager and Jaeger.
+#   docker compose up -d --build
+#   docker compose exec console aiops inject s12-backup-cron-noisy        (Prometheus fires the alert on its own)
+#   open http://localhost:8080 (approvals), http://localhost:9090 (Prometheus), http://localhost:16686 (Jaeger)
+x-svc: &svc
+  build: .
+  volumes: ["data:/data"]
+services:
+  nginx:    { <<: *svc, command: ["python", "-m", "aiops.sim.service", "--name", "nginx", "--port", "9101", "--host", "0.0.0.0", "--world", "/data/active"] }
+  api:      { <<: *svc, command: ["python", "-m", "aiops.sim.service", "--name", "api", "--port", "9102", "--host", "0.0.0.0", "--world", "/data/active"] }
+  worker:   { <<: *svc, command: ["python", "-m", "aiops.sim.service", "--name", "worker", "--port", "9103", "--host", "0.0.0.0", "--world", "/data/active"] }
+  postgres: { <<: *svc, command: ["python", "-m", "aiops.sim.service", "--name", "postgres", "--port", "9104", "--host", "0.0.0.0", "--world", "/data/active"] }
+  console:
+    <<: *svc
+    command: ["uvicorn", "aiops.web:app", "--host", "0.0.0.0", "--port", "8080"]
+    ports: ["8080:8080"]
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MIN_INTERVAL: ${AI_MIN_INTERVAL:-4.5}
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    volumes: ["./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro", "./deploy/alert-rules.yml:/etc/prometheus/alert-rules.yml:ro"]
+    ports: ["9090:9090"]
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    volumes: ["./deploy/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro"]
+    ports: ["9093:9093"]
+  jaeger:
+    image: jaegertracing/all-in-one:1.62.0
+    ports: ["16686:16686", "4318:4318"]
+volumes:
+  data: {}
