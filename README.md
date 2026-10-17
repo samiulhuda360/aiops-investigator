@@ -1,8 +1,17 @@
 # aiops-investigator
 
-**An AI on-call engineer.** When a monitoring alert fires, it investigates with read-only tools and writes an
-incident report with evidence and a proposed fix. A person approves or rejects the fix. It never changes anything
-itself.
+**An AI detective for when your website or app breaks.** When something goes wrong, it works out what happened and
+why, shows the proof, and suggests a fix. A person always decides whether to apply it.
+
+> **In plain words:** think of a careful engineer who is woken at 3 am by an alarm. Normally they spend half an hour
+> searching through records to find the cause. This tool does that searching in seconds. It can only *look* at
+> things, never change them, so it can't make a problem worse.
+>
+> **Who it's for:** small IT and software teams who look after websites and online services and take turns being
+> on call.
+>
+> **What you get:** a short report for every alarm (what broke, why, the evidence, and a suggested fix with an undo
+> plan) and an Approve or Reject button.
 
 [![ci](https://github.com/samiulhuda360/aiops-investigator/actions/workflows/ci.yml/badge.svg)](https://github.com/samiulhuda360/aiops-investigator/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.11%20%7C%203.12-2f6f68)
